@@ -1,6 +1,12 @@
 package unit;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import global.enums.ActivationPhase;
+import global.enums.PassiveSkillType;
+import global.enums.StatType;
+
 import skill.Skill;
 import skill.passive.DefaultSkill;
 import skill.weapon.*;
@@ -15,38 +21,40 @@ public class Unit {
 	public MoveType moveType;
 	
 	int currentHealth;
-	int maxHealth;
-	int[] baseStat;
+	Map<StatType, Integer> baseStat;
 	int[] allyTurnStats;
 	int[] enemyTurnStats;
+	Map<PassiveSkillType, Skill> unitSkills;
 	Weapon weapon;
 	Skill assist;
 	Skill special;
-	Skill aSlot;
-	Skill bSlot;
-	Skill cSlot;
-	Skill sSlot;
 		
-	public Unit(String name, int maxHealth, int attack, int speed, int defense, int resistance) {
+	public Unit(String name, int health, int attack, int speed, int defense, int resistance) {
 		this.name = name;
-		
-		baseStat = new int[] {attack, speed, defense, resistance};
-		this.maxHealth = maxHealth;
-		this.currentHealth = maxHealth;
+		this.currentHealth = health;
 		
 		this.weapon = new DefaultWeapon();
-		this.aSlot = new DefaultSkill();
-		this.bSlot = new DefaultSkill();
-		this.cSlot = new DefaultSkill();
-		this.sSlot = new DefaultSkill();
+
+		baseStat = new HashMap<StatType, Integer>();
+		baseStat.put(StatType.Health, health);
+		baseStat.put(StatType.Attack, attack);
+		baseStat.put(StatType.Speed, speed);
+		baseStat.put(StatType.Defense, defense);
+		baseStat.put(StatType.Resistance, resistance);
+		
+		unitSkills = new HashMap<PassiveSkillType, Skill>();
+		unitSkills.put(PassiveSkillType.A, new DefaultSkill());
+		unitSkills.put(PassiveSkillType.B, new DefaultSkill());
+		unitSkills.put(PassiveSkillType.C, new DefaultSkill());
+		unitSkills.put(PassiveSkillType.S, new DefaultSkill());
 	}
 	
 	public int currentHealth() {
-		return this.currentHealth;
+		return currentHealth;
 	}
 
 	public Unit currentHealth(int health) {
-		this.currentHealth = health;
+		currentHealth = health;
 		if(currentHealth < 0) {
 			currentHealth = 0;
 		}
@@ -64,22 +72,35 @@ public class Unit {
 		}
 	}
 	
-	public int attack(ActivationPhase currentPhase) {
-		return baseStat[0]+activateSkills(0, currentPhase);
+	//getters, use these to access unit stats
+	private int getStat(StatType stat, ActivationPhase currentPhase) {
+		return baseStat.get(stat) + activateSkills(stat, currentPhase);
 	}
-	public Unit attack(int attack) {
-		baseStat[0] = attack;
-		return this;
+	
+	public int attack(ActivationPhase currentPhase) {
+		return getStat(StatType.Attack, currentPhase);
 	}
 	
 	public int speed(ActivationPhase currentPhase) {
-		return baseStat[1]+activateSkills(1, currentPhase);
+		return getStat(StatType.Speed, currentPhase);
 	}
-	public Unit speed(int speed) {
-		baseStat[1] = speed;
+	
+	public int getDefensiveStat() {
+		return baseStat.get(StatType.Defense);
+	}
+
+	//setters, may remove later
+	public Unit attack(int attack) {
+		baseStat.put(StatType.Attack, attack);
 		return this;
 	}
 
+	public Unit speed(int speed) {
+		baseStat.put(StatType.Speed, speed);
+		return this;
+	}
+
+	//unit skills
 	public Weapon weapon() {
 		return this.weapon;
 	}
@@ -91,23 +112,23 @@ public class Unit {
 
 	
 	public Skill aSlot() {
-		return this.aSlot;
+		return unitSkills.get(PassiveSkillType.A);
 	}
 	
 	public Unit aSlot(Skill aSlot) {
-		this.aSlot = aSlot;
+		unitSkills.put(PassiveSkillType.A, aSlot);
 		return this;
 	}
 	
 	
-	public int activateSkills(int statIndex, ActivationPhase currentPhase) {
-		return aSlot.getStatBonus(statIndex, currentPhase)+bSlot.getStatBonus(statIndex, currentPhase)+cSlot.getStatBonus(statIndex, currentPhase)+sSlot.getStatBonus(statIndex, currentPhase);//+weapon.getStatBonus(statIndex);
+	public int activateSkills(StatType stat, ActivationPhase currentPhase) {
+		return unitSkills.get(PassiveSkillType.A).getStatBonus(stat, currentPhase)
+				+ unitSkills.get(PassiveSkillType.B).getStatBonus(stat, currentPhase)
+				+ unitSkills.get(PassiveSkillType.C).getStatBonus(stat, currentPhase)
+				+ unitSkills.get(PassiveSkillType.S).getStatBonus(stat, currentPhase);
+				//+weapon.getStatBonus();
 	}
-	
-	public int getDefensiveStat() {
-		return baseStat[2];
-	}
-	
+		
 	public void ownTurnActionClear() {
 		enemyTurnStats = new int[] {0,0,0,0};
 	}

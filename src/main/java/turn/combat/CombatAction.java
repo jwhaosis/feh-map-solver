@@ -59,12 +59,14 @@ public class CombatAction {
 
 		//triangle adept and triangle advantage
 		double triangleBonus = 0.2;
-		if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
+		
+		//TODO: move skills off weapons and add them to skill class
+		/*if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
 			triangleBonus = 0.4;
-		}
-		if(whacker.weapon().weaponTriangleAdvantage() == sandbag.weapon().color) {
+		}*/
+		if(whacker.weapon().type().weaponTriangleAdvantage() == sandbag.weapon().color()) {
 			atk = (int) Math.floor(atk * (1+triangleBonus));
-		} else if (whacker.weapon().color == sandbag.weapon().weaponTriangleAdvantage()) {
+		} else if (whacker.weapon().color() == sandbag.weapon().type().weaponTriangleAdvantage()) {
 			atk = (int) Math.ceil(atk * (1-triangleBonus));
 		}
 		
@@ -72,26 +74,7 @@ public class CombatAction {
 	}
 	
 	private int calculateDamage(boolean preCombatSpecial) {
-		int atk = whacker.attack(currentPhase);
-		int def = sandbag.getDefensiveStat();
-		
-		//effectiveness weapons
-		if(whacker.weapon().effectiveBonus.contains(sandbag.moveType)) {
-			atk = (int) Math.floor(atk * 1.5);
-		}
-
-		//triangle adept and triangle advantage
-		double triangleBonus = 0.2;
-		if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
-			triangleBonus = 0.4;
-		}
-		if(whacker.weapon().weaponTriangleAdvantage() == sandbag.weapon().color) {
-			atk = (int) Math.floor(atk * (1+triangleBonus));
-		} else if (whacker.weapon().color == sandbag.weapon().weaponTriangleAdvantage()) {
-			atk = (int) Math.ceil(atk * (1-triangleBonus));
-		}
-		
-		return Math.max(0, atk-def);
+		return 0;
 	}
 
 		

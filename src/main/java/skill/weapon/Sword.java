@@ -1,9 +1,11 @@
 package skill.weapon;
 
+import global.enums.WeaponType;
+
 public class Sword extends Weapon{
 
 	public Sword(String name) {
-		super(name, WeaponColor.Red, DamageType.Physical, 1);
+		super(name, WeaponType.Sword);
 	}
 	
 }

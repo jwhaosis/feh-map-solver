@@ -1,6 +1,7 @@
 package skill;
 
 import global.enums.ActivationPhase;
+import global.enums.StatType;
 
 public abstract class Skill {
 	
@@ -28,9 +29,9 @@ public abstract class Skill {
 	}
 
 	
-	public int getStatBonus(int statIndex, ActivationPhase currentPhase) {
+	public int getStatBonus(StatType stat, ActivationPhase currentPhase) {
 		if(activationPhase.isActive(currentPhase)) {
-			return bonus[statIndex];
+			return bonus[stat.index];
 		} else {
 			return 0;
 		}

@@ -92,7 +92,7 @@ public class CombatActionQueue {
 		
 		//sweep skills
 		
-		if(sandbag.weapon().allRangeCounter || sandbag.weapon().engageRange == whacker.weapon().engageRange) {
+		if(sandbag.weapon().allRangeCounter || sandbag.weapon().range() == whacker.weapon().range() ) {
 			return true;
 		} else {
 			return false;
