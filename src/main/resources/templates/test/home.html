@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<head>
+
+	<style type = "text/css">
+	
+	body {
+		line-height:1.6;
+		font-family: Helvetica, Calibri, sans-serif;
+		font-size:18px;
+		background:#f2f2f2;
+		color:#454545;
+	}
+	
+	.text {
+		margin:60px auto;
+		max-width:800px;
+		padding:10px 
+	}
+	</style>
+	
+    <title>FEH Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+<header th:insert="partials/header.html :: header"> </header>
+    
+<div class="text">
+	<h1>
+	Web Format Testing Site
+	</h1>
+    <p th:text="'Hello, ' + ${name} + '!'" />
+    
+	<div id="ajax_result"></div>
+
+
+
+    <script type="text/javascript" th:src="@{/js/onclick.js}"></script>
+
+
+
+
+    <p>the quick brown fox jumps over the lazy dog</p>
+    <p>THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG </p>
+</div>
+</body>
+
+</html>
