@@ -6,33 +6,43 @@ import unit.Unit;
 public enum SkillType {
 	Empty,
 	
+	//A-Slot
 	Plus,
-	Blow,
-	Stance,
-	Breath,
-	//HP threshold is calculated by taking the percent * total HP and then rounding down. EX. A unit with wary fighter that has 53HP will not lose it until 25HP.
-	Brazen,
-	Push,
 	Nullify,
 	Triangle,
-
+	Blow,
+	Stance,
+	//HP threshold is calculated by taking the percent * total HP and then rounding down. EX. A unit with wary fighter that has 53HP will not lose it until 25HP.
+	
+	Brazen,
+	Push,
 	Boost,
 	Blade,
-	
 	Bond,
-	Solo;
+	Solo,
 	
-
+	//B-Slot
+	Vantage,
+	Desperation,
+	Brash,
+	Riposte,
+	SpecialOnInitiateAttack,
+	SpecialOnInitiateDefend,
+	SpecialOnCounterAttack,
+	SpecialOnCounterDefend;
+	
 	SkillType(){};
 	
+
 	public boolean isActive(Unit unit, Unit enemy, Map map, StatType stat, ActivationPhase currentPhase) {
+
 		if(this == SkillType.Plus) {
 			return true;
-		} else if (this == SkillType.Blow && currentPhase == ActivationPhase.Initiate) {
+		} /*else if (this == SkillType.Blow && currentPhase == ActivationPhase.Initiate) {
 			return true;
 		} else if (this == SkillType.Blow && currentPhase == ActivationPhase.Initiate) {
 			return true;
-		} else if ((this == SkillType.Stance || this == SkillType.Breath) && currentPhase == ActivationPhase.Counter) {
+		} else if (this == SkillType.Stance && currentPhase == ActivationPhase.Counter) {
 			return true;
 		} else if (this == SkillType.Brazen && (unit.currentHealth() <= (int) Math.floor(unit.getStat(StatType.Health) * 0.8))) {
 			return true;
@@ -48,11 +58,9 @@ public enum SkillType {
 			return true;
 		} else if(this == SkillType.Solo && map.nearbyUnitsAllyUnits(unit, 1).size() == 0) {
 			return true;
-		} else {
+		}*/ else {
 			return false;
 		}
-
-		
 	}
 		
 }

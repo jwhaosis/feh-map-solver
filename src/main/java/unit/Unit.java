@@ -28,7 +28,12 @@ public class Unit {
 	int currentHealth;
 	int[] allyTurnStats;
 	int[] enemyTurnStats;
-
+	int numInitiateAttacks = 1;
+	int numCounterAttacks = 1;
+	int specialCdOnInitiateAttack = 1;
+	int specialCdOnInitiateDefend = 1;
+	int specialCdOnCounterAttack = 1;
+	int specialCdOnCounterDefend = 1;
 		
 	public Unit(String name, int health, int attack, int speed, int defense, int resistance) {
 		this.name = name;
@@ -112,6 +117,12 @@ public class Unit {
 		
 	public void ownTurnActionClear() {
 		enemyTurnStats = new int[] {0,0,0,0};
+		numInitiateAttacks = 1;
+		numCounterAttacks = 1;
+		specialCdOnInitiateAttack = 1;
+		specialCdOnInitiateDefend = 1;
+		specialCdOnCounterAttack = 1;
+		specialCdOnCounterDefend = 1;
 	}
 	
 	public void ownTurnStartClear() {
