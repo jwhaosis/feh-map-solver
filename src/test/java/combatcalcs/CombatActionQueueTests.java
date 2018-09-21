@@ -79,4 +79,12 @@ public class CombatActionQueueTests {
         assertEquals(testOutput.removeLast(), CombatStrings.END(), "Should display " + CombatStrings.END());
     }
     
+    /*
+	@Test 
+	public void shouldIncludeSpeedBonus() {
+    	Unit ally = new Unit("Player", 30,20,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+	}
+	*/
+    
 }

@@ -2,6 +2,7 @@ package global.enums;
 
 public enum WeaponType {
 	
+	None(DamageType.Physical, WeaponColor.Grey, 0),
 	Plank(DamageType.Physical, WeaponColor.Grey, 1),
 
 	Sword(DamageType.Physical, WeaponColor.Red, 1),

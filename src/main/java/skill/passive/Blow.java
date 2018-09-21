@@ -1,6 +1,6 @@
 package skill.passive;
 
-import global.enums.ActivationPhase;
+import global.enums.SkillType;
 import skill.Skill;
 
 public class Blow extends Skill {
@@ -9,6 +9,6 @@ public class Blow extends Skill {
 	int[] bonus;
 	
 	public Blow(int[] bonus) {
-		super(bonus, ActivationPhase.Initiate);
+		super(bonus, SkillType.Blow);
 	}
 }

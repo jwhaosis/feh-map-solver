@@ -7,8 +7,6 @@ import java.util.List;
 import global.enums.DamageType;
 import global.enums.WeaponColor;
 import global.enums.WeaponType;
-import skill.Skill;
-import skill.passive.DefaultSkill;
 import unit.Unit.MoveType;
 
 public abstract class Weapon {//extends Skill {

@@ -3,7 +3,6 @@ package unit;
 import java.util.HashMap;
 import java.util.Map;
 
-import global.enums.ActivationPhase;
 import global.enums.PassiveSkillType;
 import global.enums.StatType;
 
@@ -24,7 +23,7 @@ public class Unit {
 	Map<StatType, Integer> baseStat;
 	int[] allyTurnStats;
 	int[] enemyTurnStats;
-	Map<PassiveSkillType, Skill> unitSkills;
+	public Map<PassiveSkillType, Skill> unitSkills;
 	Weapon weapon;
 	Skill assist;
 	Skill special;
@@ -73,32 +72,19 @@ public class Unit {
 	}
 	
 	//getters, use these to access unit stats
-	private int getStat(StatType stat, ActivationPhase currentPhase) {
-		return baseStat.get(stat) + activateSkills(stat, currentPhase);
+	public int getStat(StatType stat) {
+		return baseStat.get(stat);
 	}
 	
-	public int attack(ActivationPhase currentPhase) {
-		return getStat(StatType.Attack, currentPhase);
-	}
-	
-	public int speed(ActivationPhase currentPhase) {
-		return getStat(StatType.Speed, currentPhase);
-	}
-	
-	public int getDefensiveStat() {
-		return baseStat.get(StatType.Defense);
+	public StatType getAdaptiveDefense() {
+		return ((getStat(StatType.Defense) < getStat(StatType.Resistance)) ? StatType.Defense : StatType.Resistance);
 	}
 
-	//setters, may remove later
-	public Unit attack(int attack) {
+	//setter using the builder syntax
+	/*public Unit attack(int attack) {
 		baseStat.put(StatType.Attack, attack);
 		return this;
-	}
-
-	public Unit speed(int speed) {
-		baseStat.put(StatType.Speed, speed);
-		return this;
-	}
+	}*/
 
 	//unit skills
 	public Weapon weapon() {
@@ -118,15 +104,6 @@ public class Unit {
 	public Unit aSlot(Skill aSlot) {
 		unitSkills.put(PassiveSkillType.A, aSlot);
 		return this;
-	}
-	
-	
-	public int activateSkills(StatType stat, ActivationPhase currentPhase) {
-		return unitSkills.get(PassiveSkillType.A).getStatBonus(stat, currentPhase)
-				+ unitSkills.get(PassiveSkillType.B).getStatBonus(stat, currentPhase)
-				+ unitSkills.get(PassiveSkillType.C).getStatBonus(stat, currentPhase)
-				+ unitSkills.get(PassiveSkillType.S).getStatBonus(stat, currentPhase);
-				//+weapon.getStatBonus();
 	}
 		
 	public void ownTurnActionClear() {

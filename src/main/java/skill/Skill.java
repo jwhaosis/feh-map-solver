@@ -1,44 +1,42 @@
 package skill;
 
 import global.enums.ActivationPhase;
+import global.enums.SkillType;
 import global.enums.StatType;
+import map.Map;
+import unit.Unit;
 
 public abstract class Skill {
 	
 	String name;
 	
-	ActivationPhase activationPhase;
-
 	int[] bonus;
-	boolean triangleBonus;
+	SkillType type;
+	StatType compareStat;
+	
+	boolean condition = false;
 	
 	//for combat bonuses
-	public Skill(int[] bonus, ActivationPhase activationPhase) {
-		this.activationPhase = activationPhase;
+	public Skill(int[] bonus, SkillType type) {
+		this.type = type;
 		
 		this.bonus = bonus;
-		this.triangleBonus = false;
 	}
 	
-	//for triangle adept
-	public Skill(boolean triangleBonus) {
-		this.activationPhase = ActivationPhase.Both;
-		
-		this.bonus = new int[] {0,0,0,0};
-		this.triangleBonus = true;
+	public int[] getStatBonus(ActivationPhase currentPhase) {
+		return bonus;
 	}
-
 	
-	public int getStatBonus(StatType stat, ActivationPhase currentPhase) {
-		if(activationPhase.isActive(currentPhase)) {
-			return bonus[stat.index];
-		} else {
-			return 0;
-		}
+	public SkillType getType() {
+		return type;
+	}
+	
+	public boolean isActive(Unit unit, Unit enemy, Map map, ActivationPhase currentPhase){
+		return type.isActive(unit, enemy, map, compareStat, currentPhase);
 	}
 	
 	public boolean triangleBonus() {
-		return triangleBonus;
+		return type == SkillType.Triangle;
 	}
 	
 

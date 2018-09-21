@@ -4,18 +4,28 @@ import java.lang.StringBuilder;
 
 import formatting.CombatStrings;
 import global.enums.ActivationPhase;
+import global.enums.DamageType;
+import global.enums.StatType;
 import unit.Unit;
 
 public class CombatAction {
 	
 	Unit whacker;
 	Unit sandbag;
+	
+	int[] whackerBonus;
+	int[] sandbagBonus;
+
 	ActivationPhase currentPhase;
 	boolean preCombatSpecial;
 	
-	public CombatAction(Unit whacker, Unit sandbag, ActivationPhase currentPhase) {
+	public CombatAction(Unit whacker, Unit sandbag, int[] whackerBonus, int[] sandbagBonus, ActivationPhase currentPhase) {
 		this.whacker = whacker;
 		this.sandbag = sandbag;
+		
+		this.whackerBonus = whackerBonus;
+		this.sandbagBonus = sandbagBonus;
+		
 		this.currentPhase = currentPhase;
 		this.preCombatSpecial = false;
 	}
@@ -27,7 +37,7 @@ public class CombatAction {
 		this.preCombatSpecial = preCombatSpecial;
 	}
 
-
+	//calculate damage and return the result string
 	public String execute() {
 		/*if(preCombatSpecial) {
 			damageDealt = sandbag.takeDamage(calculatePreCombat());
@@ -47,10 +57,11 @@ public class CombatAction {
 
 		return resultString;
 	}
-		
+	
+	//calculate damage dealt for this attack
 	private int calculateDamage() {
-		int atk = whacker.attack(currentPhase);
-		int def = sandbag.getDefensiveStat();
+		int atk = CombatActionQueue.getStatPlusBonus(whacker, whackerBonus, StatType.Attack);
+		int def = CombatActionQueue.getStatPlusBonus(sandbag, sandbagBonus, targetDefensiveStat());
 		
 		//effectiveness weapons
 		if(whacker.weapon().effectiveBonus.contains(sandbag.moveType)) {
@@ -76,7 +87,20 @@ public class CombatAction {
 	private int calculateDamage(boolean preCombatSpecial) {
 		return 0;
 	}
+	
+	//choose the target defensive stat
+	private StatType targetDefensiveStat() {
+		DamageType whackerType = whacker.weapon().damageType();
+		if(whackerType == DamageType.Physical) {
+			return StatType.Defense;
+		} else if(whackerType == DamageType.Magical) {
+			return StatType.Resistance;
+		} else if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 2) {
+			return sandbag.getAdaptiveDefense();
+		} else /*if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 1)*/ {
+			return StatType.Resistance;
+		}
+	}
 
-		
 
 }

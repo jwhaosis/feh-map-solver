@@ -1,5 +1,7 @@
 package map;
 
+import java.util.ArrayList;
+
 import unit.Unit;
 
 public class Map {
@@ -29,5 +31,19 @@ public class Map {
 	Unit[][] generateUnits(){
 		return new Unit[6][8];
 	}
+	
+	//TODO: make these actually do something
+	public ArrayList<Unit> nearbyUnits(Unit unit, int range) {
+		return new ArrayList<Unit>();
+	}
+	
+	public ArrayList<Unit> nearbyUnitsAllyUnits(Unit unit, int range) {
+		return new ArrayList<Unit>();
+	}
+	
+	public ArrayList<Unit> nearbyUnitsEnemyUnits(Unit unit, int range) {
+		return new ArrayList<Unit>();
+	}
+
 	
 }

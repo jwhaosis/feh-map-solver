@@ -1,25 +1,38 @@
 package turn.combat;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import formatting.CombatStrings;
 import global.enums.ActivationPhase;
+import global.enums.StatType;
+import map.Map;
+import skill.Skill;
 import unit.Unit;
 
 public class CombatActionQueue {
 	
 	private Unit attackingUnit;
 	private Unit defendingUnit;
+	
+	int[] attackingBonus;
+	int[] defendingBonus;
+
 	private int atkHits;
 	private int defHits;
 	
+
 	public CombatActionQueue(Unit attackingUnit, Unit defendingUnit) {
 		this.attackingUnit = attackingUnit;
 		this.defendingUnit = defendingUnit;
+		
+		this.attackingBonus = getSkillBonus(attackingUnit);
+		this.defendingBonus = getSkillBonus(defendingUnit);
+		
 		int totalHits = calculateHits();
-		atkHits = totalHits/10;
-		defHits = totalHits%10;
+		atkHits = totalHits / 10;
+		defHits = totalHits % 10;
 	}
 	
 	public LinkedList<String> execute() {
@@ -61,7 +74,7 @@ public class CombatActionQueue {
 	
 	private int calculateHits() {
 		int resultHits = 11;
-		int speedDiff = attackingUnit.speed(ActivationPhase.Initiate)-defendingUnit.speed(ActivationPhase.Counter);
+		int speedDiff = getStatPlusBonus(attackingUnit, StatType.Speed) - getStatPlusBonus(defendingUnit, StatType.Speed);
 		if(speedDiff >= 5) {
 			resultHits += 10;
 		} else if (speedDiff <= -5) {
@@ -114,7 +127,7 @@ public class CombatActionQueue {
 	private CombatAction enqueueAttack() {
 		if(atkHits > 0) {
 			atkHits--;
-			return new CombatAction(attackingUnit, defendingUnit, ActivationPhase.Initiate);
+			return new CombatAction(attackingUnit, defendingUnit, attackingBonus, defendingBonus, ActivationPhase.Initiate);
 		} else {
 			return null;
 		}
@@ -123,9 +136,37 @@ public class CombatActionQueue {
 	private CombatAction enqueueCounter() {
 		if(defHits > 0) {
 			defHits--;
-			return new CombatAction(defendingUnit, attackingUnit, ActivationPhase.Counter);
+			return new CombatAction(defendingUnit, attackingUnit, defendingBonus, attackingBonus, ActivationPhase.Initiate);
 		} else {
 			return null;
 		}
 	}
+	
+	private int[] getSkillBonus(Unit unit) {
+		int[] totalBonus = new int[5];
+		ActivationPhase phase = unit == attackingUnit ? ActivationPhase.Initiate : ActivationPhase.Counter;
+		
+		Iterator<Skill> skillIter = unit.unitSkills.values().iterator();
+		while(skillIter.hasNext()) {
+			//TODO: make map linked
+			Map map = null;
+			Skill currentSkill = skillIter.next();
+			if(currentSkill.isActive(unit, ((unit == attackingUnit) ? defendingUnit : attackingUnit), map, phase)) {
+				int[] skillBonus = currentSkill.getStatBonus(phase);
+				for(int i = 0; i < 5; i++) {
+					totalBonus[i] += skillBonus[i];
+				}
+			}
+		}
+		return totalBonus;
+	}
+	
+	private int getStatPlusBonus(Unit unit, StatType stat) {
+		return unit.getStat(stat) + (unit == attackingUnit ? attackingBonus : defendingBonus)[stat.index];
+	}
+
+	public static int getStatPlusBonus(Unit unit, int[] bonus, StatType stat) {
+		return unit.getStat(stat) + bonus[stat.index];
+	}
+
 }
