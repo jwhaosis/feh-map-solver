@@ -31,6 +31,17 @@ public abstract class Weapon {//extends Skill {
 		this.effectiveBonus = new ArrayList<MoveType>();
 	}
 	
+	public Weapon(String name, WeaponType weaponType, ArrayList<MoveType> effective){
+		this.name = name;
+		this.weaponType = weaponType;
+		this.weaponStats = new int[] {0,0,0,0};
+		
+		this.allRangeCounter = false;
+		//this.skill = new DefaultSkill();
+		this.effectiveBonus = effective;
+	}
+
+	
 	public WeaponType type() {
 		return weaponType;
 	}

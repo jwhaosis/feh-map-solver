@@ -1,6 +1,9 @@
 package skill.weapon;
 
+import java.util.ArrayList;
+
 import global.enums.WeaponType;
+import unit.Unit.MoveType;
 
 public class DefaultWeapon extends Weapon{
 
@@ -11,5 +14,10 @@ public class DefaultWeapon extends Weapon{
 	public DefaultWeapon(WeaponType type) {
 		super("Training Weapon", type);
 	}
+	
+	public DefaultWeapon(WeaponType type, ArrayList<MoveType> effective) {
+		super("Training Weapon", type, effective);
+	}
+	
 
 }

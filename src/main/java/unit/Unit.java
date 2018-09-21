@@ -14,24 +14,28 @@ public class Unit {
 	
 	public enum MoveType {Infantry, Cavalry, Flier, Armor, Dragon_Infantry, Dragon_Flier, Dragon_Armor};
 	
-	public boolean ally;
+	public final boolean ally;
 	
-	public String name;
-	public MoveType moveType;
+	public final String name;
+	public final MoveType moveType;
 	
-	int currentHealth;
-	Map<StatType, Integer> baseStat;
-	int[] allyTurnStats;
-	int[] enemyTurnStats;
-	public Map<PassiveSkillType, Skill> unitSkills;
+	final Map<StatType, Integer> baseStat;
+	public final Map<PassiveSkillType, Skill> unitSkills;
 	Weapon weapon;
 	Skill assist;
 	Skill special;
+	
+	int currentHealth;
+	int[] allyTurnStats;
+	int[] enemyTurnStats;
+
 		
 	public Unit(String name, int health, int attack, int speed, int defense, int resistance) {
 		this.name = name;
 		this.currentHealth = health;
 		
+		this.ally = true;
+		this.moveType = MoveType.Infantry;
 		this.weapon = new DefaultWeapon();
 
 		baseStat = new HashMap<StatType, Integer>();
