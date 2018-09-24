@@ -6,6 +6,19 @@ import unit.Unit;
 
 public class Map {
 	
+    private static Map instance = null;
+    
+    public static Map setInstance(String terrain) {
+        if (instance == null) {
+            instance = new Map(terrain);
+        }
+        return instance;
+    }
+
+    public static Map getInstance() {
+        return instance;
+    }
+
 	Tile[][] map;
 	Unit[][] units;
 	

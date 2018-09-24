@@ -8,7 +8,7 @@ public enum ActivationPhase {
 	Both;
 	
 	public boolean isActive(ActivationPhase currentPhase) {
-		if(this == ActivationPhase.Both) {
+		if(this == ActivationPhase.Both || currentPhase == ActivationPhase.Both) {
 			return true;
 		} else {
 			return this == currentPhase;

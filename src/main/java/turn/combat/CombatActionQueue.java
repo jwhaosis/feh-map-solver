@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import formatting.CombatStrings;
 import global.enums.ActivationPhase;
 import global.enums.StatType;
-import global.interfaces.SkillCondition;
 import map.Map;
 import skill.Skill;
 import unit.Unit;
@@ -155,7 +154,7 @@ public class CombatActionQueue {
 			//TODO: make map linked
 			Map map = null;
 			Skill currentSkill = skillIter.next();
-			if(currentSkill.isActive(unit, (unit == attackingUnit ? defendingUnit : attackingUnit), map, phase)) {
+			if(currentSkill.isActive(unit, (unit == attackingUnit ? defendingUnit : attackingUnit), phase)) {
 				int[] skillBonus = currentSkill.getStatBonus(phase);
 				for(int i = 0; i < 5; i++) {
 					totalBonus[i] += skillBonus[i];
