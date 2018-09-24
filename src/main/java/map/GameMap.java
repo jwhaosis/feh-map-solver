@@ -4,25 +4,25 @@ import java.util.ArrayList;
 
 import unit.Unit;
 
-public class Map {
+public class GameMap {
 	
-    private static Map instance = null;
+    private static GameMap instance = null;
     
-    public static Map setInstance(String terrain) {
+    public static GameMap setInstance(String terrain) {
         if (instance == null) {
-            instance = new Map(terrain);
+            instance = new GameMap(terrain);
         }
         return instance;
     }
 
-    public static Map getInstance() {
+    public static GameMap getInstance() {
         return instance;
     }
 
 	Tile[][] map;
 	Unit[][] units;
 	
-	public Map(String terrain){
+	public GameMap(String terrain){
 		map = generateMap(terrain);
 		units = generateUnits();
 	}

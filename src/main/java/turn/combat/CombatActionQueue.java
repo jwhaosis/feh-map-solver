@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import formatting.CombatStrings;
-import global.enums.ActivationPhase;
-import global.enums.StatType;
+import global.enums.skillinfo.ActivationPhase;
+import global.enums.unitinfo.StatType;
 import unit.Unit;
 
 public class CombatActionQueue {

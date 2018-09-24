@@ -1,4 +1,4 @@
-package global.enums;
+package global.enums.skillinfo;
 
 import unit.Unit;
 

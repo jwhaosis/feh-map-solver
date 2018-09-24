@@ -1,6 +1,6 @@
 package map;
 
-import global.enums.TileType;
+import global.enums.gamemap.TileType;
 
 public class Tile {
 	

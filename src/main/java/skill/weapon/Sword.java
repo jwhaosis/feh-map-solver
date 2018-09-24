@@ -1,6 +1,6 @@
 package skill.weapon;
 
-import global.enums.WeaponType;
+import global.enums.unitinfo.WeaponType;
 
 public class Sword extends Weapon{
 

@@ -4,9 +4,9 @@ package skill.weapon;
 import java.util.ArrayList;
 import java.util.List;
 
-import global.enums.DamageType;
-import global.enums.WeaponColor;
-import global.enums.WeaponType;
+import global.enums.unitinfo.DamageType;
+import global.enums.unitinfo.WeaponColor;
+import global.enums.unitinfo.WeaponType;
 import unit.Unit.MoveType;
 
 public abstract class Weapon {//extends Skill {

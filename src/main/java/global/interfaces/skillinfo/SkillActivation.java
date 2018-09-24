@@ -1,4 +1,4 @@
-package global.interfaces;
+package global.interfaces.skillinfo;
 
 @FunctionalInterface
 public interface SkillActivation<One, Two, Output> {

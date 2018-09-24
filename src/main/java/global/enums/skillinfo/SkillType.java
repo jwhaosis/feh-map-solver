@@ -1,7 +1,8 @@
-package global.enums;
+package global.enums.skillinfo;
 
-import global.interfaces.SkillCondition;
-import map.Map;
+import global.enums.unitinfo.StatType;
+import global.interfaces.skillinfo.SkillCondition;
+import map.GameMap;
 import unit.Unit;
 
 public enum SkillType {
@@ -19,8 +20,8 @@ public enum SkillType {
 	Brazen((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
 	Push((unit, enemy, phase, stat, threshold) -> unit.currentHealth() == unit.getStat(StatType.Health)),
 
-	Bond((unit, enemy, phase, stat, threshold) -> Map.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
-	Solo((unit, enemy, phase, stat, threshold) -> Map.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
+	Bond((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
+	Solo((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
 	
 	Damaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
 	Undamaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) >= threshold),

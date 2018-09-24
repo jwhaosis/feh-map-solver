@@ -1,4 +1,4 @@
-package global.enums;
+package global.enums.unitinfo;
 
 public enum DamageType {
 	Physical, 

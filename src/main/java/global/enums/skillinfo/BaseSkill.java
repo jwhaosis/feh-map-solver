@@ -1,9 +1,7 @@
-package global.enums.skill;
+package global.enums.skillinfo;
 
-import global.enums.ActivationPhase;
-import global.enums.SkillType;
-import global.enums.StatType;
-import global.interfaces.SkillActivation;
+import global.enums.unitinfo.StatType;
+import global.interfaces.skillinfo.SkillActivation;
 import unit.Unit;
 
 public enum BaseSkill {

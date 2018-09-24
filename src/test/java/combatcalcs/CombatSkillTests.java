@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
 
 import formatting.CombatStrings;
-import global.enums.PassiveSkillType;
-import global.enums.skill.BaseSkill;
+import global.enums.skillinfo.BaseSkill;
+import global.enums.skillinfo.PassiveSkillType;
 import turn.combat.CombatActionQueue;
 import unit.Unit;
 

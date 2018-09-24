@@ -3,10 +3,10 @@ package unit;
 import java.util.HashMap;
 import java.util.Map;
 
-import global.enums.ActivationPhase;
-import global.enums.PassiveSkillType;
-import global.enums.StatType;
-import global.enums.skill.BaseSkill;
+import global.enums.skillinfo.ActivationPhase;
+import global.enums.skillinfo.BaseSkill;
+import global.enums.skillinfo.PassiveSkillType;
+import global.enums.unitinfo.StatType;
 import skill.weapon.*;
 
 public class Unit {	

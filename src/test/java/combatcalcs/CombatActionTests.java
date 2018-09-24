@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 import formatting.CombatStrings;
-import global.enums.ActivationPhase;
-import global.enums.WeaponType;
+import global.enums.skillinfo.ActivationPhase;
+import global.enums.unitinfo.WeaponType;
 import skill.weapon.DefaultWeapon;
 import turn.combat.CombatAction;
 import unit.Unit;

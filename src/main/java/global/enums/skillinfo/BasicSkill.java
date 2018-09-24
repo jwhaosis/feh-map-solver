@@ -1,7 +1,6 @@
-package global.enums.skill;
+package global.enums.skillinfo;
 
-import global.enums.SkillType;
-import global.enums.StatType;
+import global.enums.unitinfo.StatType;
 
 public enum BasicSkill {
 	//Stat Plus Skills

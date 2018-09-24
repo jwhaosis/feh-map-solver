@@ -3,9 +3,9 @@ package turn.combat;
 import java.lang.StringBuilder;
 
 import formatting.CombatStrings;
-import global.enums.ActivationPhase;
-import global.enums.DamageType;
-import global.enums.StatType;
+import global.enums.skillinfo.ActivationPhase;
+import global.enums.unitinfo.DamageType;
+import global.enums.unitinfo.StatType;
 import unit.Unit;
 
 public class CombatAction {
