@@ -33,6 +33,11 @@ public enum BaseSkill {
 	BrazenAtkSpd((unit, level) -> unit.increaseCombatBonus(1 + 2*level, StatType.Attack) + unit.increaseCombatBonus(1 + 2*level, StatType.Speed), SkillType.Brazen, StatType.Health, new int[] {80,80,80}),
 	BrazenAtkDef((unit, level) -> unit.increaseCombatBonus(1 + 2*level, StatType.Attack) + unit.increaseCombatBonus(1 + 2*level, StatType.Defense), SkillType.Brazen, StatType.Health, new int[] {80,80,80}),
 	BrazenAtkRes((unit, level) -> unit.increaseCombatBonus(1 + 2*level, StatType.Attack) + unit.increaseCombatBonus(1 + 2*level, StatType.Resistance), SkillType.Brazen, StatType.Health, new int[] {80,80,80}),
+	
+	//Pushes
+	AtkSpdPush((unit, level) -> unit.increaseCombatBonus(2 + level, StatType.Attack) + unit.increaseCombatBonus(2 + level, StatType.Speed), SkillType.Push),
+	AtkDefPush((unit, level) -> unit.increaseCombatBonus(2 + level, StatType.Attack) + unit.increaseCombatBonus(2 + level, StatType.Defense), SkillType.Push),
+	AtkResPush((unit, level) -> unit.increaseCombatBonus(2 + level, StatType.Attack) + unit.increaseCombatBonus(2 + level, StatType.Resistance), SkillType.Push),
 
 	//Boosts and Blades
 	FireBoost((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Attack), SkillType.Boost, StatType.Health, new int[] {3,3,3}),
