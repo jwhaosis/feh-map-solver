@@ -3,11 +3,10 @@ package unit;
 import java.util.HashMap;
 import java.util.Map;
 
+import global.enums.ActivationPhase;
 import global.enums.PassiveSkillType;
 import global.enums.StatType;
-
-import skill.Skill;
-import skill.passive.DefaultSkill;
+import global.enums.skill.BaseSkill;
 import skill.weapon.*;
 
 public class Unit {	
@@ -19,42 +18,55 @@ public class Unit {
 	public final String name;
 	public final MoveType moveType;
 	
-	final Map<StatType, Integer> baseStat;
-	public final Map<PassiveSkillType, Skill> unitSkills;
+	final int[] baseStat;
+	final Map<PassiveSkillType, BaseSkill> unitSkillList;
+	final Map<PassiveSkillType, Integer> unitSkillLevels;
+	public final int defaultSkillLevel = 3;
 	Weapon weapon;
-	Skill assist;
-	Skill special;
+	//Skill assist;
+	//Skill special;
 	
 	int currentHealth;
-	int[] allyTurnStats;
-	int[] enemyTurnStats;
-	int numInitiateAttacks = 1;
-	int numCounterAttacks = 1;
-	int specialCdOnInitiateAttack = 1;
-	int specialCdOnInitiateDefend = 1;
-	int specialCdOnCounterAttack = 1;
-	int specialCdOnCounterDefend = 1;
+	int[] allyTurnFieldBonus;
+	int[] enemyTurnFieldBonus;
+	int[] combatBonus;
+	
+	public int numInitiateAttacks = 1;
+	public int numCounterAttacks = 1;
+	public int specialCdOnInitiateAttack = 1;
+	public int specialCdOnInitiateDefend = 1;
+	public int specialCdOnCounterAttack = 1;
+	public int specialCdOnCounterDefend = 1;
 		
 	public Unit(String name, int health, int attack, int speed, int defense, int resistance) {
-		this.name = name;
-		this.currentHealth = health;
-		
+
 		this.ally = true;
+
+		this.name = name;
 		this.moveType = MoveType.Infantry;
+		
+		this.currentHealth = health;
+		allyTurnFieldBonus = new int[5];
+		enemyTurnFieldBonus = new int[5];
+		combatBonus = new int[5];
+		baseStat = new int[5];
+		baseStat[StatType.Health.index] = health;
+		baseStat[StatType.Attack.index] = attack;
+		baseStat[StatType.Speed.index] = speed;
+		baseStat[StatType.Defense.index] = defense;
+		baseStat[StatType.Resistance.index] = resistance;
+		unitSkillList = new HashMap<PassiveSkillType, BaseSkill>();
+		unitSkillList.put(PassiveSkillType.A, BaseSkill.Default);
+		unitSkillList.put(PassiveSkillType.B, BaseSkill.Default);
+		unitSkillList.put(PassiveSkillType.C, BaseSkill.Default);
+		unitSkillList.put(PassiveSkillType.S, BaseSkill.Default);
+		unitSkillLevels = new HashMap<PassiveSkillType, Integer>();
+		unitSkillLevels.put(PassiveSkillType.A, defaultSkillLevel);
+		unitSkillLevels.put(PassiveSkillType.B, defaultSkillLevel);
+		unitSkillLevels.put(PassiveSkillType.C, defaultSkillLevel);
+		unitSkillLevels.put(PassiveSkillType.S, defaultSkillLevel);
 		this.weapon = new DefaultWeapon();
 
-		baseStat = new HashMap<StatType, Integer>();
-		baseStat.put(StatType.Health, health);
-		baseStat.put(StatType.Attack, attack);
-		baseStat.put(StatType.Speed, speed);
-		baseStat.put(StatType.Defense, defense);
-		baseStat.put(StatType.Resistance, resistance);
-		
-		unitSkills = new HashMap<PassiveSkillType, Skill>();
-		unitSkills.put(PassiveSkillType.A, new DefaultSkill());
-		unitSkills.put(PassiveSkillType.B, new DefaultSkill());
-		unitSkills.put(PassiveSkillType.C, new DefaultSkill());
-		unitSkills.put(PassiveSkillType.S, new DefaultSkill());
 	}
 	
 	public int currentHealth() {
@@ -81,8 +93,9 @@ public class Unit {
 	}
 	
 	//getters, use these to access unit stats
+	//TODO: Add combat and non-combat bonuses to the stat
 	public int getStat(StatType stat) {
-		return baseStat.get(stat);
+		return baseStat[stat.index] + allyTurnFieldBonus[stat.index] + enemyTurnFieldBonus[stat.index] + combatBonus[stat.index];
 	}
 	
 	public StatType getAdaptiveDefense() {
@@ -106,17 +119,24 @@ public class Unit {
 	}
 
 	
-	public Skill aSlot() {
-		return unitSkills.get(PassiveSkillType.A);
+	public BaseSkill aSlot() {
+		return unitSkillList.get(PassiveSkillType.A);
 	}
 	
-	public Unit aSlot(Skill aSlot) {
-		unitSkills.put(PassiveSkillType.A, aSlot);
+	//Add a skill to a unit
+	public Unit addSkill(PassiveSkillType slot, BaseSkill skill) {
+		unitSkillList.put(slot, skill);
+		return this;
+	}
+	public Unit addSkill(PassiveSkillType slot, BaseSkill skill, int level) {
+		unitSkillList.put(slot, skill);
+		unitSkillLevels.put(slot, level);
 		return this;
 	}
 		
 	public void ownTurnActionClear() {
-		enemyTurnStats = new int[] {0,0,0,0};
+		enemyTurnFieldBonus = new int[5];
+		combatBonus = new int[5];
 		numInitiateAttacks = 1;
 		numCounterAttacks = 1;
 		specialCdOnInitiateAttack = 1;
@@ -126,7 +146,18 @@ public class Unit {
 	}
 	
 	public void ownTurnStartClear() {
-		allyTurnStats = new int[] {0,0,0,0};
+		allyTurnFieldBonus = new int[5];
+	}
+	
+	public int increaseCombatBonus(int bonus, StatType stat) {
+		combatBonus[stat.index] += bonus;
+		return bonus;
+	}
+	
+	public void activateSkills(Unit enemy, ActivationPhase currentPhase) {
+		for(PassiveSkillType slot : unitSkillList.keySet()) {
+			unitSkillList.get(slot).activateSkill(this, enemy, currentPhase, Math.min(unitSkillLevels.get(slot), defaultSkillLevel));
+		}
 	}
 
 }

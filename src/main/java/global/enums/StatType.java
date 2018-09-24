@@ -1,6 +1,7 @@
 package global.enums;
 
 public enum StatType {
+	None(-1),
 	Health(0),
 	Attack(1),
 	Speed(2),

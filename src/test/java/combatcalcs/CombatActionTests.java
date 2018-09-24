@@ -20,7 +20,7 @@ public class CombatActionTests {
     public void shouldDealCorrectAmountofDamage() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
     }
 	
@@ -28,7 +28,7 @@ public class CombatActionTests {
     public void shouldAppendOverkill() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 5,0,0,0,0);
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5) + CombatStrings.OVERKILL(5), "The combat result is inconsistant, 5 damage and 5 overkill should have been dealt.");
     }
 	
@@ -39,7 +39,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 12), "The combat result is inconsistant, 12 damage should have been dealt.");
 	}
 	
@@ -49,7 +49,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 8), "The combat result is inconsistant, 8 damage should have been dealt.");
 	}
 	
@@ -59,7 +59,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 15), "The combat result is inconsistant, 15 damage should have been dealt.");
 	}
 	
@@ -69,7 +69,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 11), "The combat result is inconsistant, 11 damage should have been dealt.");
 	}
 	
@@ -78,7 +78,7 @@ public class CombatActionTests {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Plank, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 15), "The combat result is inconsistant, 15 damage should have been dealt.");
 	}
 
@@ -87,7 +87,7 @@ public class CombatActionTests {
     	Unit ally = new Unit("Player", 30,11,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Plank, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 16), "The combat result is inconsistant, 16 damage should have been dealt.");
 	}
 	
@@ -97,7 +97,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 18), "The combat result is inconsistant, 18 damage should have been dealt.");
 	}
 	
@@ -107,7 +107,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 12), "The combat result is inconsistant, 12 damage should have been dealt.");
 	}
 	
@@ -117,7 +117,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 22), "The combat result is inconsistant, 22 damage should have been dealt.");
 	}
 
@@ -127,16 +127,16 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
     	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 16), "The combat result is inconsistant, 16 damage should have been dealt.");
 	}
 
 	//Invisible bonuses
-	@Test 
+	/*@Test 
 	public void shouldIncludeAttackerBonus() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[] {0,5,0,0,0}, new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 15), "The combat result is inconsistant, 15 damage should have been dealt.");
 	}
 	
@@ -144,16 +144,16 @@ public class CombatActionTests {
 	public void shouldIncludeDefenderBonus() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[] {0,0,0,5,5}, ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
-	}
+	}*/
 	
 	//Weapon defensive stat targeting
 	@Test 
 	public void shouldTargetDefWithPhysical() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,0);
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
 	}
 
@@ -162,7 +162,7 @@ public class CombatActionTests {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,0);
     	ally.weapon(new DefaultWeapon(WeaponType.RTome));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
 	}
 	
@@ -171,7 +171,7 @@ public class CombatActionTests {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,0);
     	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
 	}
 	
@@ -181,7 +181,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,10);
     	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
     	enemy.weapon(new DefaultWeapon(WeaponType.Bow));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
 	}
 
@@ -191,7 +191,7 @@ public class CombatActionTests {
     	Unit enemy = new Unit("Sandbag", 50,0,0,10,5);
     	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
     	enemy.weapon(new DefaultWeapon(WeaponType.Bow));
-    	CombatAction testAction = new CombatAction(ally, enemy, new int[5], new int[5], ActivationPhase.Both);
+    	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
 	}
 }

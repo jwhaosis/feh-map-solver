@@ -13,18 +13,12 @@ public class CombatAction {
 	Unit whacker;
 	Unit sandbag;
 	
-	int[] whackerBonus;
-	int[] sandbagBonus;
-
 	ActivationPhase currentPhase;
 	boolean preCombatSpecial;
 	
-	public CombatAction(Unit whacker, Unit sandbag, int[] whackerBonus, int[] sandbagBonus, ActivationPhase currentPhase) {
+	public CombatAction(Unit whacker, Unit sandbag, ActivationPhase currentPhase) {
 		this.whacker = whacker;
 		this.sandbag = sandbag;
-		
-		this.whackerBonus = whackerBonus;
-		this.sandbagBonus = sandbagBonus;
 		
 		this.currentPhase = currentPhase;
 		this.preCombatSpecial = false;
@@ -60,8 +54,8 @@ public class CombatAction {
 	
 	//calculate damage dealt for this attack
 	private int calculateDamage() {
-		int atk = CombatActionQueue.getStatPlusBonus(whacker, whackerBonus, StatType.Attack);
-		int def = CombatActionQueue.getStatPlusBonus(sandbag, sandbagBonus, targetDefensiveStat());
+		int atk = whacker.getStat(StatType.Attack);
+		int def = sandbag.getStat(targetDefensiveStat());
 		
 		//effectiveness weapons
 		if(whacker.weapon().effectiveBonus.contains(sandbag.moveType)) {
@@ -84,9 +78,7 @@ public class CombatAction {
 		return Math.max(0, atk-def);
 	}
 	
-	private int calculateDamage(boolean preCombatSpecial) {
-		return 0;
-	}
+	//TODO: private int calculateDamage(boolean preCombatSpecial) {return 0;}
 	
 	//choose the target defensive stat
 	private StatType targetDefensiveStat() {
