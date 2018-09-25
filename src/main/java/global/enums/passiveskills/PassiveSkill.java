@@ -56,8 +56,12 @@ public enum PassiveSkill {
 	SteadyBreath((unit,level) -> {unit.specialCdOnCounterAttack = 2; unit.specialCdOnCounterDefend = 2; return unit.increaseCombatBonus(4, StatType.Defense);}, PassiveSkillType.Stance),
 	WardingBreath((unit,level) -> {unit.specialCdOnCounterAttack = 2; unit.specialCdOnCounterDefend = 2; return unit.increaseCombatBonus(4, StatType.Resistance);}, PassiveSkillType.Stance),
 	VengefulFighter((unit,level) -> {unit.numCounterAttacks = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	BoldFighter((unit,level) -> {unit.numInitiateAttacks = 2; unit.specialCdOnInitiateAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0});
-
+	BoldFighter((unit,level) -> {unit.numInitiateAttacks = 2; unit.specialCdOnInitiateAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0}),
+	
+	//Weapon Unique Skills
+	Slaying((unit, level) -> unit.increaseBonusSpecialCharge(), PassiveSkillType.Plus),
+	Wrathful((unit, level) -> unit.increaseBonusSpecialDamage(), PassiveSkillType.Plus);
+	
 	SkillActivation<Unit, Integer, Integer> skillEffect;
 	PassiveSkillType type;
 	StatType stat;

@@ -1,42 +1,40 @@
 package global.enums.weaponskills;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import global.enums.passiveskills.PassiveSkill;
 import global.enums.unitinfo.StatType;
 
 public enum WeaponSkill {
-	Silver(15, new WeaponType[] {WeaponType.Sword, WeaponType.Lance, WeaponType.Axe}),
+	//Ranged (bows and tomes) mt can be equal to melee * 0.925 rounded down
+	Silver(15),
+	
+	Slaying(14),
+	Wrathful(13),
+	Brave(8),
+	AntiArmor(12),
+	AntiCavalry(12),
+	Firesweep(15),
+	Gem(12),
+				
 	
 	
-	/*Slaying(14, new WeaponType[] {WeaponType.Sword, WeaponType.Lance, WeaponType.Axe}),
-	Wrathful,
-	Brave,
-	AntiArmor,
-	AntiCavalry,
-	Firesweep,
-	Gem,
+	placeholder(15);
 	
-	Safeguard,
-	Barrier,
-	
-	Seasonal,
-	
-	LightningBreath,*/
-	
-		
-	
-	
-	placeholder(15, new WeaponType[] {WeaponType.Sword, WeaponType.Lance, WeaponType.Axe});
-	
-	WeaponType[] restrictions;
 	int might;
 	
 	StatType refine;
-	int[] refineBonus;
+	ArrayList<Integer> refineBonus;
+	ArrayList<PassiveSkill> weaponSkillList;
 	
-	WeaponSkill(int might, WeaponType[] restrictions){
+	WeaponSkill(int might, PassiveSkill ...skills){
 		this.might = might;
-		this.restrictions = restrictions;
 		
 		this.refine = StatType.None;
-		this.refineBonus = new int[] {5,3,3,4,4};
+		this.refineBonus = new ArrayList<Integer>(Arrays.asList(5,3,3,4,4));
+		this.weaponSkillList = new ArrayList<PassiveSkill>(Arrays.asList(skills));
+		
+		
 	}
 }

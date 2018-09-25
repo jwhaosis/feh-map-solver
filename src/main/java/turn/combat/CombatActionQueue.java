@@ -47,7 +47,7 @@ public class CombatActionQueue {
 	private LinkedList<CombatAction> buildQueue() {
 		LinkedList<CombatAction> resultQueue = new LinkedList<CombatAction>();
 		if(checkPreCombatSpecial()) {
-			resultQueue.add(new CombatAction(attackingUnit, defendingUnit, true));
+			//resultQueue.add(new CombatAction(attackingUnit, defendingUnit, true));
 		}
 		if(checkCounterPrioritySkill()) {
 			resultQueue.add(enqueueCounter());

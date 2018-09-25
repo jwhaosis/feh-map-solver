@@ -1,9 +1,14 @@
 package global.enums.passiveskills;
 
 public enum PassiveSkillSlot {
-	A,
-	B,
-	C,
-	S,
-	Unique;
+	A(0),
+	B(1),
+	C(2),
+	S(3);
+	
+	public int index;
+	
+	PassiveSkillSlot(int index){
+		this.index = index;
+	}
 }

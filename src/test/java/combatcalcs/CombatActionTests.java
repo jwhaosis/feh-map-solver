@@ -161,7 +161,7 @@ public class CombatActionTests {
 	public void shouldTargetResWithMagical() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.RTome));
+    	ally.weapon(new DefaultWeapon(WeaponType.Tome));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
 	}
@@ -170,7 +170,7 @@ public class CombatActionTests {
 	public void shouldTargetResWithBreath() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
+    	ally.weapon(new DefaultWeapon(WeaponType.Breath));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
 	}
@@ -179,7 +179,7 @@ public class CombatActionTests {
 	public void shouldTargetDefWhenRangedResHigher() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,5,10);
-    	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
+    	ally.weapon(new DefaultWeapon(WeaponType.Breath));
     	enemy.weapon(new DefaultWeapon(WeaponType.Bow));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
@@ -189,7 +189,7 @@ public class CombatActionTests {
 	public void shouldTargetResWhenRangedDefHigher() {
     	Unit ally = new Unit("Player", 30,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,10,5);
-    	ally.weapon(new DefaultWeapon(WeaponType.RBreath));
+    	ally.weapon(new DefaultWeapon(WeaponType.Breath));
     	enemy.weapon(new DefaultWeapon(WeaponType.Bow));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");

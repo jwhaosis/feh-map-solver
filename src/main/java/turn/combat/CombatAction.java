@@ -5,7 +5,6 @@ import java.lang.StringBuilder;
 import formatting.CombatStrings;
 import global.enums.passiveskills.ActivationPhase;
 import global.enums.unitinfo.StatType;
-import global.enums.weaponskills.DamageType;
 import unit.Unit;
 
 public class CombatAction {
@@ -21,13 +20,6 @@ public class CombatAction {
 		this.sandbag = sandbag;
 		this.currentPhase = currentPhase;
 		this.preCombatSpecial = false;
-	}
-	
-	public CombatAction(Unit whacker, Unit sandbag, boolean preCombatSpecial) {
-		this.whacker = whacker;
-		this.sandbag = sandbag;
-		this.currentPhase = ActivationPhase.Both;
-		this.preCombatSpecial = preCombatSpecial;
 	}
 
 	//calculate damage and return the result string
@@ -47,6 +39,9 @@ public class CombatAction {
 			resultAppender.append(CombatStrings.OVERKILL(theoreticalDamage - actualDamage));
 			return resultAppender.toString();
 		}
+		
+		whacker.increaseCurrentSpecialCharge(true, currentPhase);
+		sandbag.increaseCurrentSpecialCharge(false, currentPhase);
 
 		return resultString;
 	}
@@ -54,42 +49,53 @@ public class CombatAction {
 	//calculate damage dealt for this attack
 	private int calculateDamage() {
 		int atk = whacker.getStat(StatType.Attack);
-		int def = sandbag.getStat(targetDefensiveStat());
+		int def = sandbag.getStat(sandbag.targetDefensiveStat(whacker.weapon().damageType()));
 		
+		//TODO: implement flat damage (light brand)
+		int flatDamage = 0;
+		
+		//TODO: implement forts
+		int fortMitigation = 0;
+		
+		double effectivenessBonus = 1;
+		double triangleBonus = 0;
+
 		//effectiveness weapons
 		if(whacker.weapon().effectiveBonus.contains(sandbag.moveType)) {
-			atk = (int) Math.floor(atk * 1.5);
+			effectivenessBonus = 1.5;
 		}
 
 		//triangle adept and triangle advantage
-		double triangleBonus = 0.2;
 		
 		//TODO: move skills off weapons and add them to skill class
 		/*if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
 			triangleBonus = 0.4;
 		}*/
+		
 		if(whacker.weaponTriangleAdvantage() == sandbag.color) {
-			atk = (int) Math.floor(atk * (1+triangleBonus));
+			triangleBonus = 0.2;
 		} else if (whacker.color == sandbag.weaponTriangleAdvantage()) {
-			atk = (int) Math.ceil(atk * (1-triangleBonus));
+			triangleBonus = -0.2;
+		} else {
+			triangleBonus = 0;
 		}
 		
-		return Math.max(0, atk-def);
+		int specialDamage = whacker.activateSpecial(sandbag, true);
+		
+		int specialMitigation = sandbag.activateSpecial(whacker, false);
+		
+		//TODO: get map to check if unit is on a defensive tile
+		fortMitigation = (int) Math.floor(def * fortMitigation);
+		fortMitigation = 0;
+		
+		int roundedDamage = (int) Math.floor(atk * effectivenessBonus) 
+					+ (int) Math.floor(Math.floor(atk * effectivenessBonus) * triangleBonus)
+					+ specialDamage
+					- def
+					- fortMitigation;
+
+		return Math.max(0, Math.max(0, roundedDamage) + flatDamage);
 	}
 	
 	//TODO: private int calculateDamage(boolean preCombatSpecial) {return 0;}
-	
-	//choose the target defensive stat
-	private StatType targetDefensiveStat() {
-		DamageType whackerType = whacker.weapon().damageType();
-		if(whackerType == DamageType.Physical) {
-			return StatType.Defense;
-		} else if(whackerType == DamageType.Magical) {
-			return StatType.Resistance;
-		} else if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 2) {
-			return sandbag.getAdaptiveDefense();
-		} else /*if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 1)*/ {
-			return StatType.Resistance;
-		}
-	}
 }
