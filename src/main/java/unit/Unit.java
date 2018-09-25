@@ -166,7 +166,6 @@ public class Unit {
 			return 0;
 			//return -1;
 		}
-		 
 	}
 
 	public Weapon weapon() {
@@ -193,7 +192,16 @@ public class Unit {
 		unitSkillLevels.add(slot.index, level);
 		return this;
 	}
-		
+	
+	public SpecialSkill getSpecial() {
+		return special;
+	}
+
+	public Unit addSpecial(SpecialSkill skill) {
+		special = skill;
+		return this;
+	}
+	
 	//TODO: organize these other methods
 	public void ownTurnActionClear() {
 		enemyTurnFieldBonus.replaceAll(bonus -> bonus*0);

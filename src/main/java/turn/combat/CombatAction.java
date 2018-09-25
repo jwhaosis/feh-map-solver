@@ -42,7 +42,7 @@ public class CombatAction {
 		
 		whacker.increaseCurrentSpecialCharge(true, currentPhase);
 		sandbag.increaseCurrentSpecialCharge(false, currentPhase);
-
+		
 		return resultString;
 	}
 	
@@ -82,7 +82,7 @@ public class CombatAction {
 		
 		int specialDamage = whacker.activateSpecial(sandbag, true);
 		
-		int specialMitigation = sandbag.activateSpecial(whacker, false);
+		//int specialMitigation = sandbag.activateSpecial(whacker, false);
 		
 		//TODO: get map to check if unit is on a defensive tile
 		fortMitigation = (int) Math.floor(def * fortMitigation);

@@ -40,6 +40,8 @@ public class CombatActionQueue {
 			}
 		}
 		
+		attackingUnit.ownTurnActionClear();
+		defendingUnit.ownTurnActionClear();
 		actionOutput.add(CombatStrings.END());
 		return actionOutput;
 	}
@@ -140,4 +142,5 @@ public class CombatActionQueue {
 		defendingUnit.activateSkills(attackingUnit, ActivationPhase.Counter);
 		return 1;
 	}
+	
 }

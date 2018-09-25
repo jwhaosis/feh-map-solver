@@ -23,6 +23,7 @@ public enum SpecialSkill {
 	
 	SpecialSkill(SkillSpecialDamage<Unit, Unit, Integer> damageCalc, boolean activateOnAttack, int charge){
 		this.damageCalc = damageCalc;
+		this.activateOnAttack = activateOnAttack;
 		this.charge = charge;
 	}
 	
