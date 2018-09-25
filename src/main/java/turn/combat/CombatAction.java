@@ -88,8 +88,8 @@ public class CombatAction {
 		fortMitigation = (int) Math.floor(def * fortMitigation);
 		fortMitigation = 0;
 		
-		int roundedDamage = (int) Math.floor(atk * effectivenessBonus) 
-					+ (int) Math.floor(Math.floor(atk * effectivenessBonus) * triangleBonus)
+		int roundedDamage = (int) (atk * effectivenessBonus) 
+					+ (int) (Math.floor(atk * effectivenessBonus) * triangleBonus)
 					+ specialDamage
 					- def
 					- fortMitigation;

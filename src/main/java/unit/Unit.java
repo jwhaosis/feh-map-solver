@@ -20,9 +20,9 @@ public class Unit {
 	
 	public final String name;
 	public final MoveType moveType;
-	public final WeaponColor color;
-	
 	final ArrayList<Integer> baseStat;
+
+	public final WeaponColor color;	
 	Weapon weapon;
 	//Skill assist;
 	SpecialSkill special;
@@ -45,7 +45,7 @@ public class Unit {
 	int bonusSpecialCharge = 0;
 	int bonusSpecialDamage = 0;
 	
-	public Unit(String name, MoveType move, WeaponColor color, int hp, int atk, int spd, int def, int res) {
+	public Unit(String name, MoveType move, WeaponColor color, Weapon weapon, int hp, int atk, int spd, int def, int res) {
 		this.ally = true;
 
 		this.name = name;
@@ -75,7 +75,7 @@ public class Unit {
 	}
 	
 	public Unit(String name, int hp, int atk, int spd, int def, int res) {
-		this(name, MoveType.Infantry, WeaponColor.Grey, hp, atk, spd, def, res);
+		this(name, MoveType.Infantry, WeaponColor.Grey, new DefaultWeapon(), hp, atk, spd, def, res);
 	}
 	
 	//Get and Set current health

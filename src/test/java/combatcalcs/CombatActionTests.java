@@ -10,6 +10,9 @@ import global.enums.passiveskills.ActivationPhase;
 import global.enums.weaponskills.WeaponType;
 import skill.weapon.DefaultWeapon;
 import turn.combat.CombatAction;
+import unit.AxeUnit;
+import unit.LanceUnit;
+import unit.SwordUnit;
 import unit.Unit;
 import unit.Unit.MoveType;
 
@@ -35,40 +38,32 @@ public class CombatActionTests {
 	//Triangle Advantage and Effectiveness Weapons
 	@Test
 	public void shouldCalculateTriangleAdvantage() {
-    	Unit ally = new Unit("Player", 30,10,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Lance));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
+    	Unit ally = new LanceUnit("Player", 30,10,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 12), "The combat result is inconsistant, 12 damage should have been dealt.");
 	}
 	
 	@Test
 	public void shouldCalculateTriangleDisadvantage() {
-    	Unit ally = new Unit("Player", 30,10,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Axe));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
+    	Unit ally = new AxeUnit("Player", 30,10,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 8), "The combat result is inconsistant, 8 damage should have been dealt.");
 	}
 	
 	@Test
 	public void shouldRoundDownTriangleAdvantage() {
-    	Unit ally = new Unit("Player", 30,13,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Lance));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
+    	Unit ally = new LanceUnit("Player", 30,13,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 15), "The combat result is inconsistant, 15 damage should have been dealt.");
 	}
 	
 	@Test
 	public void shouldRoundUpTriangleDisadvantage() {
-    	Unit ally = new Unit("Player", 30,13,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Axe));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
+    	Unit ally = new AxeUnit("Player", 30,13,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 11), "The combat result is inconsistant, 11 damage should have been dealt.");
 	}
@@ -93,40 +88,36 @@ public class CombatActionTests {
 	
 	@Test
 	public void shouldCalculateEffectiveAndTriangleAdvantage() {
-    	Unit ally = new Unit("Player", 30,10,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	Unit ally = new LanceUnit("Player", 30,10,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 18), "The combat result is inconsistant, 18 damage should have been dealt.");
 	}
 	
 	@Test
 	public void shouldCalculateEffectiveAndTriangleDisadvantage() {
-    	Unit ally = new Unit("Player", 30,10,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	Unit ally = new AxeUnit("Player", 30,10,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 12), "The combat result is inconsistant, 12 damage should have been dealt.");
 	}
 	
 	@Test
 	public void shouldRoundEffectiveAndTriangleAdvantageSeperately() {
-    	Unit ally = new Unit("Player", 30,13,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	Unit ally = new LanceUnit("Player", 30,13,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Lance, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 22), "The combat result is inconsistant, 22 damage should have been dealt.");
 	}
 
 	@Test
 	public void shouldRoundEffectiveAndTriangleDisadvantageSeperately() {
-    	Unit ally = new Unit("Player", 30,13,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	Unit ally = new AxeUnit("Player", 30,13,0,0,0);
+    	Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
     	ally.weapon(new DefaultWeapon(WeaponType.Axe, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
-    	enemy.weapon(new DefaultWeapon(WeaponType.Sword));
     	CombatAction testAction = new CombatAction(ally, enemy, ActivationPhase.Both);
     	assertEquals(testAction.execute(), CombatStrings.DAMAGE(ally, enemy, 16), "The combat result is inconsistant, 16 damage should have been dealt.");
 	}
