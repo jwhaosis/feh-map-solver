@@ -1,6 +1,4 @@
-package global.enums.skillinfo;
-
-import unit.Unit;
+package global.enums.passiveskills;
 
 public enum ActivationPhase {
 	Initiate,
@@ -12,14 +10,6 @@ public enum ActivationPhase {
 			return true;
 		} else {
 			return this == currentPhase;
-		}
-	}
-	
-	public static ActivationPhase getCurrentPhase(Unit initiator, Unit whacker) {
-		if(initiator == whacker) {
-			return ActivationPhase.Initiate;
-		} else {
-			return ActivationPhase.Counter;
 		}
 	}
 }

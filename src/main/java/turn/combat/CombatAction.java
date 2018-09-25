@@ -3,9 +3,9 @@ package turn.combat;
 import java.lang.StringBuilder;
 
 import formatting.CombatStrings;
-import global.enums.skillinfo.ActivationPhase;
-import global.enums.unitinfo.DamageType;
+import global.enums.passiveskills.ActivationPhase;
 import global.enums.unitinfo.StatType;
+import global.enums.weaponskills.DamageType;
 import unit.Unit;
 
 public class CombatAction {
@@ -19,7 +19,6 @@ public class CombatAction {
 	public CombatAction(Unit whacker, Unit sandbag, ActivationPhase currentPhase) {
 		this.whacker = whacker;
 		this.sandbag = sandbag;
-		
 		this.currentPhase = currentPhase;
 		this.preCombatSpecial = false;
 	}
@@ -69,9 +68,9 @@ public class CombatAction {
 		/*if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
 			triangleBonus = 0.4;
 		}*/
-		if(whacker.weapon().type().weaponTriangleAdvantage() == sandbag.weapon().color()) {
+		if(whacker.weaponTriangleAdvantage() == sandbag.color) {
 			atk = (int) Math.floor(atk * (1+triangleBonus));
-		} else if (whacker.weapon().color() == sandbag.weapon().type().weaponTriangleAdvantage()) {
+		} else if (whacker.color == sandbag.weaponTriangleAdvantage()) {
 			atk = (int) Math.ceil(atk * (1-triangleBonus));
 		}
 		
@@ -93,6 +92,4 @@ public class CombatAction {
 			return StatType.Resistance;
 		}
 	}
-
-
 }

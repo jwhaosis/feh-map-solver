@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
 
 import formatting.CombatStrings;
-import global.enums.unitinfo.WeaponType;
+import global.enums.weaponskills.WeaponType;
 import skill.weapon.DefaultWeapon;
 import turn.combat.CombatActionQueue;
 import unit.Unit;

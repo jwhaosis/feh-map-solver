@@ -2,7 +2,7 @@ package skill.weapon;
 
 import java.util.ArrayList;
 
-import global.enums.unitinfo.WeaponType;
+import global.enums.weaponskills.WeaponType;
 import unit.Unit.MoveType;
 
 public class DefaultWeapon extends Weapon{

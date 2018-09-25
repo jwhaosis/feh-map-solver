@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import formatting.CombatStrings;
-import global.enums.skillinfo.ActivationPhase;
+import global.enums.passiveskills.ActivationPhase;
 import global.enums.unitinfo.StatType;
 import unit.Unit;
 
