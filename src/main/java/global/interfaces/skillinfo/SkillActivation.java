@@ -1,8 +1,8 @@
 package global.interfaces.skillinfo;
 
 @FunctionalInterface
-public interface SkillActivation<One, Two, Output> {
+public interface SkillActivation<Unit, Level, Output> {
 	
-    public Output apply(One one, Two two);
+    public Output apply(Unit one, Level two);
     
 }

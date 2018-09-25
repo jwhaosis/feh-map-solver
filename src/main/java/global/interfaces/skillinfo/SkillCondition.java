@@ -1,8 +1,8 @@
 package global.interfaces.skillinfo;
 
 @FunctionalInterface
-public interface SkillCondition<One, Two, Three, Four, Five, Output> {
+public interface SkillCondition<Unit, Enemy, Phase, Stat, Threshold, Output> {
 
-    public Output apply(One one, Two two, Three three, Four four, Five five);
+    public Output apply(Unit one, Enemy two, Phase three, Stat four, Threshold five);
 
 }
