@@ -9,6 +9,7 @@ import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
 import global.enums.unitinfo.MoveType;
 import global.enums.unitinfo.StatType;
+import global.enums.unitinfo.UnitType;
 import global.enums.unitinfo.WeaponColor;
 import global.enums.weaponskills.DamageType;
 import global.enums.weaponskills.WeaponSkill;
@@ -46,7 +47,7 @@ public class Unit {
 	int bonusSpecialCharge = 0;
 	int bonusSpecialDamage = 0;
 	
-	public Unit(String name, MoveType move, WeaponColor color, WeaponType type, WeaponSkill weapon, int hp, int atk, int spd, int def, int res) {
+	public Unit(String name, MoveType move, UnitType type, int hp, int atk, int spd, int def, int res) {
 		this.ally = true;
 		
 		unitSkillList = new ArrayList<PassiveSkill>();
@@ -58,9 +59,11 @@ public class Unit {
 
 		this.name = name;
 		this.moveType = move;
-		this.color = color;
-		this.weaponType = type;
-		this.weapon(WeaponSkill.Default);
+		
+		this.color = type.color;
+		this.weaponType = type.type;
+		this.weapon(type.weapon);
+		
 		this.special = SpecialSkill.Default;
 		allyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		enemyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
@@ -74,8 +77,12 @@ public class Unit {
 		baseStat.add(StatType.Resistance.index, res);
 	}
 	
+	public Unit(String name, UnitType type, int hp, int atk, int spd, int def, int res) {
+		this(name, MoveType.Infantry, type, hp, atk, spd, def, res);
+	}
+	
 	public Unit(String name, int hp, int atk, int spd, int def, int res) {
-		this(name, MoveType.Infantry, WeaponColor.Grey, WeaponType.Plank, WeaponSkill.Default, hp, atk, spd, def, res);
+		this(name, MoveType.Infantry, UnitType.Default, hp, atk, spd, def, res);
 	}
 	
 	//Get and Set current health

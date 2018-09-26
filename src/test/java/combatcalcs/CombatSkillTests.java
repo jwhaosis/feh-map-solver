@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import formatting.CombatStrings;
 import global.enums.passiveskills.PassiveSkill;
 import global.enums.passiveskills.PassiveSkillSlot;
+import global.enums.unitinfo.UnitType;
 import turn.combat.CombatActionQueue;
-import unit.BowUnit;
 import unit.Unit;
 
 public class CombatSkillTests {
@@ -138,7 +138,7 @@ public class CombatSkillTests {
 	
 	@Test
     public void shouldApplyDistantDefenseVsRanged() {
-    	Unit ally = new BowUnit("Player", 40,10,0,0,0);
+    	Unit ally = new Unit("Player", UnitType.CBow, 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.DistantDefense);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
@@ -147,7 +147,7 @@ public class CombatSkillTests {
 
 	@Test
     public void shouldDisableCloseDefenseBonusVsRanged() {
-    	Unit ally = new BowUnit("Player", 40,10,0,0,0);
+    	Unit ally = new Unit("Player", UnitType.CBow, 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.CloseDefense);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();

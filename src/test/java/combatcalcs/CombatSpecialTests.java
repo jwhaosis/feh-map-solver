@@ -10,11 +10,8 @@ import formatting.CombatStrings;
 import global.enums.passiveskills.PassiveSkill;
 import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
+import global.enums.unitinfo.UnitType;
 import turn.combat.CombatActionQueue;
-import unit.AxeUnit;
-import unit.LanceUnit;
-import unit.SwordUnit;
-import unit.TomeUnit;
 import unit.Unit;
 
 public class CombatSpecialTests {
@@ -102,7 +99,7 @@ public class CombatSpecialTests {
 
 	@Test
 	public void shouldUseEnemyResistanceForMagicalLuna() {
-	    Unit ally = new TomeUnit("Player", 40,10,0,0,0);
+	    Unit ally = new Unit("Player", UnitType.CTome, 40,10,0,0,0);
 	    Unit enemy = new Unit("Sandbag", 50,0,0,0,4);
 	    ally.addSpecial(SpecialSkill.Luna);
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
@@ -112,7 +109,7 @@ public class CombatSpecialTests {
 	
 	@Test
 	public void shouldRoundDownForMagicalLuna() {
-	    Unit ally = new TomeUnit("Player", 40,10,0,0,0);
+	    Unit ally = new Unit("Player", UnitType.CTome, 40,10,0,0,0);
 	    Unit enemy = new Unit("Sandbag", 50,0,0,0,5);
 	    ally.addSpecial(SpecialSkill.Luna);
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
@@ -182,8 +179,8 @@ public class CombatSpecialTests {
 	
 	@Test
 	public void shouldNotBeAffectedByTriangleAdvantage() {
-	    Unit ally = new LanceUnit("Player", 40,10,0,0,20);
-	    Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
+	    Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,20);
+	    Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
 	    ally.addSpecial(SpecialSkill.Iceberg);
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
@@ -192,8 +189,8 @@ public class CombatSpecialTests {
 
 	@Test
 	public void shouldNotBeAffectedByTriangleDisadvantage() {
-	    Unit ally = new AxeUnit("Player", 40,10,0,0,20);
-	    Unit enemy = new SwordUnit("Sandbag", 50,0,0,0,0);
+	    Unit ally = new Unit("Player", UnitType.Axe, 40,10,0,0,20);
+	    Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
 	    ally.addSpecial(SpecialSkill.Iceberg);
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
