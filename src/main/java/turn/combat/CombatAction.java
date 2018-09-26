@@ -66,16 +66,10 @@ public class CombatAction {
 		}
 
 		//triangle adept and triangle advantage
-		
-		//TODO: move skills off weapons and add them to skill class
-		/*if(whacker.weapon().skill.triangleBonus() == true || sandbag.weapon().skill.triangleBonus() == true) {
-			triangleBonus = 0.4;
-		}*/
-		
 		if(whacker.weaponTriangleAdvantage() == sandbag.color) {
-			triangleBonus = 0.2;
+			triangleBonus = 0.2 + Math.max(whacker.triangleAdeptBonus(), sandbag.triangleAdeptBonus());
 		} else if (whacker.color == sandbag.weaponTriangleAdvantage()) {
-			triangleBonus = -0.2;
+			triangleBonus = -(0.2 + Math.max(whacker.triangleAdeptBonus(), sandbag.triangleAdeptBonus()));
 		} else {
 			triangleBonus = 0;
 		}

@@ -264,5 +264,12 @@ public class Unit {
 		return unitSkillList.contains(PassiveSkill.AllRangeCounter);
 	}
 	
-
+	public double triangleAdeptBonus() {
+		int index = unitSkillList.lastIndexOf(PassiveSkill.TriangleAdept);
+		if(index != -1) {
+			return PassiveSkill.TriangleAdept.activateSkill(this, this, ActivationPhase.Both, unitSkillLevels.get(index)) / 100.0;
+		} else {
+			return 0;
+		}
+	}
 }

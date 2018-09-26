@@ -2,7 +2,6 @@ package global.enums.weaponskills;
 
 public enum WeaponType {
 	
-	None(DamageType.Physical, 0),
 	Plank(DamageType.Physical, 1),
 	Sword(DamageType.Physical, 1),
 	Lance(DamageType.Physical, 1),

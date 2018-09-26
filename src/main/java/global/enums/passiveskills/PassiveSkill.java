@@ -15,7 +15,8 @@ public enum PassiveSkill {
 	Def((unit, level) -> unit.increaseCombatBonus(level, StatType.Defense), PassiveSkillType.Plus),
 	Res((unit, level) -> unit.increaseCombatBonus(level, StatType.Resistance), PassiveSkillType.Plus),
 	AllRangeCounter((unit, level) -> 0, PassiveSkillType.Plus),
-
+	TriangleAdept((unit, level) -> 5 + 5 * level, PassiveSkillType.Plus),
+	
 	//Blows, Stances, and Defenses
 	DeathBlow((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Attack), PassiveSkillType.Blow),
 	DartingBlow((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Speed), PassiveSkillType.Blow),
