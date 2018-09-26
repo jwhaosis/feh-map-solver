@@ -9,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import formatting.CombatStrings;
 import global.enums.passiveskills.PassiveSkill;
 import global.enums.passiveskills.PassiveSkillSlot;
-import global.enums.weaponskills.WeaponType;
-import skill.weapon.DefaultWeapon;
 import turn.combat.CombatActionQueue;
+import unit.BowUnit;
 import unit.Unit;
 
 public class CombatSkillTests {
@@ -139,9 +138,8 @@ public class CombatSkillTests {
 	
 	@Test
     public void shouldApplyDistantDefenseVsRanged() {
-    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit ally = new BowUnit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Bow));
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.DistantDefense);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
@@ -149,9 +147,8 @@ public class CombatSkillTests {
 
 	@Test
     public void shouldDisableCloseDefenseBonusVsRanged() {
-    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit ally = new BowUnit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Bow));
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.CloseDefense);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");

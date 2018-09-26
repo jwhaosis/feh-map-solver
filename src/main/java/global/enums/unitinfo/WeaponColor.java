@@ -1,4 +1,4 @@
-package global.enums.weaponskills;
+package global.enums.unitinfo;
 
 public enum WeaponColor {
 	Red, 

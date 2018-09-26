@@ -49,7 +49,7 @@ public class CombatAction {
 	//calculate damage dealt for this attack
 	private int calculateDamage() {
 		int atk = whacker.getStat(StatType.Attack);
-		int def = sandbag.getStat(sandbag.targetDefensiveStat(whacker.weapon().damageType()));
+		int def = sandbag.getStat(sandbag.targetDefensiveStat(whacker.weaponType().damageType));
 		
 		//TODO: implement flat damage (light brand)
 		int flatDamage = 0;
@@ -61,7 +61,7 @@ public class CombatAction {
 		double triangleBonus = 0;
 
 		//effectiveness weapons
-		if(whacker.weapon().effectiveBonus.contains(sandbag.moveType)) {
+		if(whacker.isEffectiveAgainst(sandbag.moveType)) {
 			effectivenessBonus = 1.5;
 		}
 

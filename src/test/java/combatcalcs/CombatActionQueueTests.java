@@ -6,9 +6,8 @@ import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
 
 import formatting.CombatStrings;
-import global.enums.weaponskills.WeaponType;
-import skill.weapon.DefaultWeapon;
 import turn.combat.CombatActionQueue;
+import unit.BowUnit;
 import unit.Unit;
 
 public class CombatActionQueueTests {
@@ -48,16 +47,14 @@ public class CombatActionQueueTests {
 	@Test
 	public void shouldNotAllowCounterAttackMeleeOnRanged() {
     	Unit ally = new Unit("Player", 30,20,0,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
-    	enemy.weapon(new DefaultWeapon(WeaponType.Bow));
+    	Unit enemy = new BowUnit("Sandbag", 50,10,0,0,0);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
 	}
 	@Test
 	public void shouldNotAllowCounterAttackRangedOnMelee() {
-    	Unit ally = new Unit("Player", 30,20,0,0,0);
+    	Unit ally = new BowUnit("Player", 30,20,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
-    	ally.weapon(new DefaultWeapon(WeaponType.Bow));
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
 	}

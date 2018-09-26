@@ -2,21 +2,20 @@ package combatcalcs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.junit.jupiter.api.Test;
 
 import formatting.CombatStrings;
+import global.enums.passiveskills.PassiveSkill;
+import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
-import global.enums.weaponskills.WeaponType;
-import skill.weapon.DefaultWeapon;
 import turn.combat.CombatActionQueue;
 import unit.AxeUnit;
 import unit.LanceUnit;
 import unit.SwordUnit;
+import unit.TomeUnit;
 import unit.Unit;
-import unit.Unit.MoveType;
 
 public class CombatSpecialTests {
 	
@@ -103,10 +102,9 @@ public class CombatSpecialTests {
 
 	@Test
 	public void shouldUseEnemyResistanceForMagicalLuna() {
-	    Unit ally = new Unit("Player", 40,10,0,0,0);
+	    Unit ally = new TomeUnit("Player", 40,10,0,0,0);
 	    Unit enemy = new Unit("Sandbag", 50,0,0,0,4);
 	    ally.addSpecial(SpecialSkill.Luna);
-    	ally.weapon(new DefaultWeapon(WeaponType.Tome));
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
 	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 8), "The combat result is inconsistant, 8 damage should have been dealt.");
@@ -114,10 +112,9 @@ public class CombatSpecialTests {
 	
 	@Test
 	public void shouldRoundDownForMagicalLuna() {
-	    Unit ally = new Unit("Player", 40,10,0,0,0);
+	    Unit ally = new TomeUnit("Player", 40,10,0,0,0);
 	    Unit enemy = new Unit("Sandbag", 50,0,0,0,5);
 	    ally.addSpecial(SpecialSkill.Luna);
-    	ally.weapon(new DefaultWeapon(WeaponType.Tome));
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
 	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 7), "The combat result is inconsistant, 7 damage should have been dealt.");
@@ -208,7 +205,7 @@ public class CombatSpecialTests {
 	    Unit ally = new Unit("Player", 40,10,0,0,20);
 	    Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
 	    ally.addSpecial(SpecialSkill.Iceberg);
-    	ally.weapon(new DefaultWeapon(WeaponType.Plank, new ArrayList<MoveType>() {{add(MoveType.Infantry);}}));
+    	ally.addSkill(PassiveSkillSlot.S, PassiveSkill.InfantryEffective);
 	    for(int i = 0; i < 4; i++) {ally.increaseBonusSpecialCharge();}
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
 	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 25), "The combat result is inconsistant, 25 damage should have been dealt.");

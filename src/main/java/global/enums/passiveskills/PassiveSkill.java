@@ -14,6 +14,7 @@ public enum PassiveSkill {
 	Spd((unit, level) -> unit.increaseCombatBonus(level, StatType.Speed), PassiveSkillType.Plus),
 	Def((unit, level) -> unit.increaseCombatBonus(level, StatType.Defense), PassiveSkillType.Plus),
 	Res((unit, level) -> unit.increaseCombatBonus(level, StatType.Resistance), PassiveSkillType.Plus),
+	AllRangeCounter((unit, level) -> 0, PassiveSkillType.Plus),
 
 	//Blows, Stances, and Defenses
 	DeathBlow((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Attack), PassiveSkillType.Blow),
@@ -59,6 +60,12 @@ public enum PassiveSkill {
 	BoldFighter((unit,level) -> {unit.numInitiateAttacks = 2; unit.specialCdOnInitiateAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0}),
 	
 	//Weapon Unique Skills
+	InfantryEffective((unit, level) -> 0, PassiveSkillType.Plus),
+	FlierEffective((unit, level) -> 0, PassiveSkillType.Plus),
+	CavalryEffective((unit, level) -> 0, PassiveSkillType.Plus),
+	ArmorEffective((unit, level) -> 0, PassiveSkillType.Plus),
+	DragonEffective((unit, level) -> 0, PassiveSkillType.Plus),
+	
 	Slaying((unit, level) -> unit.increaseBonusSpecialCharge(), PassiveSkillType.Plus),
 	Wrathful((unit, level) -> unit.increaseBonusSpecialDamage(), PassiveSkillType.Plus);
 	

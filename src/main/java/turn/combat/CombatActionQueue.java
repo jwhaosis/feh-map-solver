@@ -96,11 +96,11 @@ public class CombatActionQueue {
 		return false;
 	}
 	
-	private boolean checkAllowCounter(Unit whacker, Unit sandbag) {
+	private boolean checkAllowCounter(Unit attacker, Unit defender) {
 		
 		//sweep skills
 		
-		if(sandbag.weapon().allRangeCounter || sandbag.weapon().range() == whacker.weapon().range() ) {
+		if(defender.hasAllRangeCounter() || defender.weaponType().range == attacker.weaponType().range) {
 			return true;
 		} else {
 			return false;

@@ -14,8 +14,8 @@ public enum SpecialSkill {
 	Ignis((unit, enemy) -> (int)(unit.getStat(StatType.Defense) * 0.8), true, 4),
 	Iceberg((unit, enemy) -> (int)(unit.getStat(StatType.Resistance) * 0.5), true, 3),
 	Glacies((unit, enemy) -> (int)(unit.getStat(StatType.Resistance) * 0.8), true, 4),
-	Moonbow((unit, enemy) -> (int)(enemy.getStat(enemy.targetDefensiveStat(unit.weapon().damageType())) * 0.3), true, 2),
-	Luna((unit, enemy) -> (int)(enemy.getStat(enemy.targetDefensiveStat(unit.weapon().damageType())) * 0.5), true, 3);
+	Moonbow((unit, enemy) -> (int)(enemy.getStat(enemy.targetDefensiveStat(unit.weaponType().damageType)) * 0.3), true, 2),
+	Luna((unit, enemy) -> (int)(enemy.getStat(enemy.targetDefensiveStat(unit.weaponType().damageType)) * 0.5), true, 3);
 	
 	SkillSpecialDamage<Unit, Unit, Integer> damageCalc;
 	boolean activateOnAttack;

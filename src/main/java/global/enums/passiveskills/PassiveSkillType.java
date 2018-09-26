@@ -15,7 +15,7 @@ public enum PassiveSkillType {
 
 	Blow((unit, enemy, phase, stat, threshold) -> phase.isActive(ActivationPhase.Initiate)),
 	Stance((unit, enemy, phase, stat, threshold) -> phase.isActive(ActivationPhase.Counter)),
-	Defense((unit, enemy, phase, stat, threshold) -> phase.isActive(ActivationPhase.Counter) && threshold == enemy.weapon().range()),
+	Defense((unit, enemy, phase, stat, threshold) -> phase.isActive(ActivationPhase.Counter) && threshold == enemy.weaponType().range),
 
 	Brazen((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
 	Push((unit, enemy, phase, stat, threshold) -> unit.currentHealth() == unit.getStat(StatType.Health)),
@@ -25,7 +25,7 @@ public enum PassiveSkillType {
 
 	Bond((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
 	Solo((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
-	
+		
 	Damaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
 	Undamaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) >= threshold);
 

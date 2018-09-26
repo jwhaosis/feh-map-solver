@@ -8,6 +8,7 @@ import global.enums.unitinfo.StatType;
 
 public enum WeaponSkill {
 	//Ranged (bows and tomes) mt can be equal to melee * 0.925 rounded down
+	Default(0),
 	Silver(15),
 	
 	Slaying(14),
@@ -34,7 +35,10 @@ public enum WeaponSkill {
 		this.refine = StatType.None;
 		this.refineBonus = new ArrayList<Integer>(Arrays.asList(5,3,3,4,4));
 		this.weaponSkillList = new ArrayList<PassiveSkill>(Arrays.asList(skills));
-		
-		
 	}
+	
+	public ArrayList<PassiveSkill> weaponPassiveSkills() {
+		return weaponSkillList;
+	}
+	
 }

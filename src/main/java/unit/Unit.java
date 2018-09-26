@@ -7,15 +7,15 @@ import global.enums.passiveskills.ActivationPhase;
 import global.enums.passiveskills.PassiveSkill;
 import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
+import global.enums.unitinfo.MoveType;
 import global.enums.unitinfo.StatType;
+import global.enums.unitinfo.WeaponColor;
 import global.enums.weaponskills.DamageType;
-import global.enums.weaponskills.WeaponColor;
-import skill.weapon.*;
+import global.enums.weaponskills.WeaponSkill;
+import global.enums.weaponskills.WeaponType;
 
 public class Unit {	
-	
-	public enum MoveType {Infantry, Cavalry, Flier, Armor, Dragon_Infantry, Dragon_Flier, Dragon_Armor};
-	
+		
 	public final boolean ally;
 	
 	public final String name;
@@ -23,12 +23,13 @@ public class Unit {
 	final ArrayList<Integer> baseStat;
 
 	public final WeaponColor color;	
-	Weapon weapon;
+	WeaponType weaponType;
+	WeaponSkill weapon;
 	//Skill assist;
 	SpecialSkill special;
 	final ArrayList<PassiveSkill> unitSkillList;
 	final ArrayList<Integer> unitSkillLevels;
-	public final int defaultSkillLevel = 3;
+	final int defaultSkillLevel = 3;
 
 	int currentHealth;
 	ArrayList<Integer> allyTurnFieldBonus;
@@ -45,13 +46,22 @@ public class Unit {
 	int bonusSpecialCharge = 0;
 	int bonusSpecialDamage = 0;
 	
-	public Unit(String name, MoveType move, WeaponColor color, Weapon weapon, int hp, int atk, int spd, int def, int res) {
+	public Unit(String name, MoveType move, WeaponColor color, WeaponType type, WeaponSkill weapon, int hp, int atk, int spd, int def, int res) {
 		this.ally = true;
+		
+		unitSkillList = new ArrayList<PassiveSkill>();
+		unitSkillLevels = new ArrayList<Integer>();
+		for(int i = PassiveSkillSlot.A.index; i <= PassiveSkillSlot.S.index; i++) {
+			unitSkillList.add(i, PassiveSkill.Default);
+			unitSkillLevels.add(i, defaultSkillLevel);
+		}
 
 		this.name = name;
 		this.moveType = move;
 		this.color = color;
-		
+		this.weaponType = type;
+		this.weapon(WeaponSkill.Default);
+		this.special = SpecialSkill.Default;
 		allyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		enemyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		combatBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
@@ -62,20 +72,10 @@ public class Unit {
 		baseStat.add(StatType.Speed.index, spd);
 		baseStat.add(StatType.Defense.index, def);
 		baseStat.add(StatType.Resistance.index, res);
-		
-		unitSkillList = new ArrayList<PassiveSkill>();
-		unitSkillLevels = new ArrayList<Integer>();
-		for(int i = PassiveSkillSlot.A.index; i <= PassiveSkillSlot.S.index; i++) {
-			unitSkillList.add(i, PassiveSkill.Default);
-			unitSkillLevels.add(i, defaultSkillLevel);
-		}
-		
-		this.weapon = new DefaultWeapon();
-		this.special = SpecialSkill.Default;
 	}
 	
 	public Unit(String name, int hp, int atk, int spd, int def, int res) {
-		this(name, MoveType.Infantry, WeaponColor.Grey, new DefaultWeapon(), hp, atk, spd, def, res);
+		this(name, MoveType.Infantry, WeaponColor.Grey, WeaponType.Plank, WeaponSkill.Default, hp, atk, spd, def, res);
 	}
 	
 	//Get and Set current health
@@ -113,7 +113,7 @@ public class Unit {
 			return StatType.Defense;
 		} else if(damageType == DamageType.Magical) {
 			return StatType.Resistance;
-		} else if(damageType == DamageType.Adaptive && this.weapon().range() == 2) {
+		} else if(damageType == DamageType.Adaptive && this.weaponType.range == 2) {
 			return ((getStat(StatType.Defense) < getStat(StatType.Resistance)) ? StatType.Defense : StatType.Resistance);
 		} else /*if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 1)*/ {
 			return StatType.Resistance;
@@ -167,12 +167,19 @@ public class Unit {
 			//return -1;
 		}
 	}
-
-	public Weapon weapon() {
-		return this.weapon;
+	public WeaponType weaponType() {
+		return weaponType;
+	}
+	public WeaponSkill weapon() {
+		return weapon;
 	}
 
-	public Unit weapon(Weapon weapon) {
+	public Unit weapon(WeaponSkill weapon) {
+		//unitSkillList.subList(PassiveSkillSlot.S.index + 1, unitSkillList.size()-1).clear();
+		//unitSkillLevels.subList(PassiveSkillSlot.S.index + 1, unitSkillLevels.size()-1).clear();
+		//this.unitSkillList.addAll(this.weapon().weaponPassiveSkills());
+		//this.unitSkillLevels.addAll();
+
 		this.weapon = weapon;
 		return this;
 	}
@@ -231,5 +238,24 @@ public class Unit {
 			unitSkillList.get(i).activateSkill(this, enemy, currentPhase, unitSkillLevels.get(i));
 		}
 	}
+	
+	public boolean isEffectiveAgainst(MoveType move) {
+		if(move.isMoveType(MoveType.Infantry) && unitSkillList.contains(PassiveSkill.InfantryEffective) ) {
+			return true;
+		} else if(move.isMoveType(MoveType.Cavalry) && unitSkillList.contains(PassiveSkill.CavalryEffective) ) {
+			return true;
+		} else if(move.isMoveType(MoveType.Flier) && unitSkillList.contains(PassiveSkill.FlierEffective) ) {
+			return true;
+		} else if(move.isMoveType(MoveType.Armor) && unitSkillList.contains(PassiveSkill.ArmorEffective) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean hasAllRangeCounter() {
+		return unitSkillList.contains(PassiveSkill.AllRangeCounter);
+	}
+	
 
 }
