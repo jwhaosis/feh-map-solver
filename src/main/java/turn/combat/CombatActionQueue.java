@@ -98,7 +98,9 @@ public class CombatActionQueue {
 	
 	private boolean checkAllowCounter(Unit attacker, Unit defender) {
 		
-		//sweep skills
+		if(attacker.enableSweep(defender)) {
+			return false;
+		}
 		
 		if(defender.hasAllRangeCounter() || defender.weaponType().range == attacker.weaponType().range) {
 			return true;

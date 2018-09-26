@@ -22,7 +22,7 @@ public enum PassiveSkillType {
 	
 	Boost((unit, enemy, phase, stat, threshold) -> unit.currentHealth() >= (enemy.currentHealth() + threshold)),
 	Blade((unit, enemy, phase, stat, threshold) -> unit.getStat(stat) >= (enemy.getStat(stat) + threshold)),
-
+	
 	Bond((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
 	Solo((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
 		

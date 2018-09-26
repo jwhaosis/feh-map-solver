@@ -272,4 +272,13 @@ public class Unit {
 			return 0;
 		}
 	}
+	
+	public boolean enableSweep(Unit enemy) {
+		int index = enemy.weaponType.damageType.identifier == 1 ? unitSkillList.lastIndexOf(PassiveSkill.Windsweep) : unitSkillList.lastIndexOf(PassiveSkill.Watersweep);
+		if(index != -1) {
+			return unitSkillList.get(index).activateSkill(this, enemy, ActivationPhase.Initiate, unitSkillLevels.get(index)) == 0;
+		} else {
+			return false;
+		}
+	}
 }

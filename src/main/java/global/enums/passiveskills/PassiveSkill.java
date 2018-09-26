@@ -53,6 +53,8 @@ public enum PassiveSkill {
 
 	HeavyBlade((unit, level) -> {unit.specialCdOnInitiateAttack = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Blade, StatType.Attack, new int[] {5,3,1}),
 	FlashingBlade((unit, level) -> {unit.specialCdOnInitiateAttack = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
+	Windsweep((unit, level) -> 0, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
+	Watersweep((unit, level) -> 0, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
 
 	//Special Charge Altering Skills
 	SteadyBreath((unit,level) -> {unit.specialCdOnCounterAttack = 2; unit.specialCdOnCounterDefend = 2; return unit.increaseCombatBonus(4, StatType.Defense);}, PassiveSkillType.Stance),
@@ -67,6 +69,7 @@ public enum PassiveSkill {
 	ArmorEffective((unit, level) -> 0, PassiveSkillType.Plus),
 	DragonEffective((unit, level) -> 0, PassiveSkillType.Plus),
 	
+	Firesweep((unit, level) -> 0, PassiveSkillType.Plus),
 	Slaying((unit, level) -> unit.increaseBonusSpecialCharge(), PassiveSkillType.Plus),
 	Wrathful((unit, level) -> unit.increaseBonusSpecialDamage(), PassiveSkillType.Plus);
 	
