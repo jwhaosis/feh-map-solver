@@ -99,7 +99,16 @@ public class CombatFlowChangeSkillTests {
 	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
 	}
 
-//Sweep Skills TODO
+//Sweep Skills
+	@Test
+	public void shouldNotSweepWithoutSpeedAdvantage() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
 	@Test
 	public void shouldSweepPhysicalMeleeWithWindsweep() {
 		Unit ally = new Unit("Player", 40,10,1,0,0);
@@ -112,11 +121,48 @@ public class CombatFlowChangeSkillTests {
 	@Test
 	public void shouldSweepPhysicalRangedWithWindsweep() {
 		Unit ally = new Unit("Player", 40,10,1,0,0);
-		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBow, 50,10,0,0,0);
 		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
 		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AllRangeCounter);
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
 	}
+	
+	@Test
+	public void shouldSweepMagicalMeleeWithWatersweep() {
+		Unit ally = new Unit("Player", 40,10,1,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBreath, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldSweepMagicalRangedWithWatersweep() {
+		Unit ally = new Unit("Player", 40,10,1,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CTome, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AllRangeCounter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
+	}
 
+	@Test
+	public void shouldNotSweepMagicalMeleeWithWindsweep() {
+		Unit ally = new Unit("Player", 40,10,1,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBreath, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test 
+	public void shouldNotSweepPhysicalRangedWithWatersweep() {
+		Unit ally = new Unit("Player", 40,10,1,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBow, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AllRangeCounter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
 }
