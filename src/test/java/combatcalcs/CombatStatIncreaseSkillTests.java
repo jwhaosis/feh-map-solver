@@ -14,7 +14,7 @@ import turn.combat.CombatActionQueue;
 import unit.Unit;
 
 public class CombatStatIncreaseSkillTests {
-	
+
 //Plus Skills
 	@Test
     public void shouldApplyPlusSkillBonusOnInitiate() {
@@ -43,7 +43,55 @@ public class CombatStatIncreaseSkillTests {
         assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
     }
 
-	//Blow Skills
+//Basic Functionality Checks
+	@Test
+	public void shouldRecognizeASlotSkill() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Atk);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+
+	@Test
+	public void shouldRecognizeBSlotSkill() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.B, PassiveSkill.Atk);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+
+	@Test
+	public void shouldRecognizeCSlotSkill() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.C, PassiveSkill.Atk);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+
+	@Test
+	public void shouldRecognizeSSlotSkill() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Atk);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+
+	@Test
+	public void shouldBeAbleToHaveMultipleSkills() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Atk);
+    	ally.addSkill(PassiveSkillSlot.B, PassiveSkill.Atk);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 16), "The combat result is inconsistant, 16 damage should have been dealt.");
+	}
+	
+
+//Blow Skills
 	@Test
     public void shouldApplyBlowBonusOnInitiateAsWhacker() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);

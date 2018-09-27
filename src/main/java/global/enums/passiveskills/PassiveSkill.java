@@ -1,6 +1,7 @@
 package global.enums.passiveskills;
 
 import global.enums.unitinfo.StatType;
+import global.enums.unitinfo.UnitCombatInfo;
 import global.interfaces.skillinfo.SkillActivation;
 import unit.Unit;
 
@@ -45,22 +46,25 @@ public enum PassiveSkill {
 	SpdResPush((unit, level) -> unit.increaseCombatBonus(2 + level, StatType.Speed) + unit.increaseCombatBonus(2 + level, StatType.Resistance), PassiveSkillType.Push),
 	DefResPush((unit, level) -> unit.increaseCombatBonus(2 + level, StatType.Defense) + unit.increaseCombatBonus(2 + level, StatType.Resistance), PassiveSkillType.Push),
 
-	//Boosts and Blades
+	//Boosts, Blades, Sweeps
 	FireBoost((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Attack), PassiveSkillType.Boost, StatType.Health, new int[] {3,3,3}),
 	WindBoost((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Speed), PassiveSkillType.Boost, StatType.Health, new int[] {3,3,3}),
 	EarthBoost((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense), PassiveSkillType.Boost, StatType.Health, new int[] {3,3,3}),
 	WaterBoost((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Boost, StatType.Health, new int[] {3,3,3}),
 
-	HeavyBlade((unit, level) -> {unit.specialCdOnInitiateAttack = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Blade, StatType.Attack, new int[] {5,3,1}),
-	FlashingBlade((unit, level) -> {unit.specialCdOnInitiateAttack = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
+	HeavyBlade((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack,UnitCombatInfo.chargeOnCounterAttack), PassiveSkillType.Blade, StatType.Attack, new int[] {5,3,1}),
+	FlashingBlade((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack,UnitCombatInfo.chargeOnCounterAttack), PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
+	
 	Windsweep((unit, level) -> 0, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
 	Watersweep((unit, level) -> 0, PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
 
 	//Special Charge Altering Skills
-	SteadyBreath((unit,level) -> {unit.specialCdOnCounterAttack = 2; unit.specialCdOnCounterDefend = 2; return unit.increaseCombatBonus(4, StatType.Defense);}, PassiveSkillType.Stance),
-	WardingBreath((unit,level) -> {unit.specialCdOnCounterAttack = 2; unit.specialCdOnCounterDefend = 2; return unit.increaseCombatBonus(4, StatType.Resistance);}, PassiveSkillType.Stance),
-	VengefulFighter((unit,level) -> {unit.numCounterAttacks = 2; unit.specialCdOnCounterAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	BoldFighter((unit,level) -> {unit.numInitiateAttacks = 2; unit.specialCdOnInitiateAttack = 2; return 1;}, PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0}),
+	Guard((unit,level) -> unit.addCombatInfo(UnitCombatInfo.reduceChargeGeneration), PassiveSkillType.Undamaged, StatType.Health, new int[] {100,90,80}),
+	Wrath((unit,level) -> unit.addCombatInfo(UnitCombatInfo.wrathDamageIncrease), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
+	SteadyBreath((unit,level) -> {unit.addCombatInfo(UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnCounterAttack); return unit.increaseCombatBonus(4, StatType.Defense);}, PassiveSkillType.Stance),
+	WardingBreath((unit,level) -> {unit.addCombatInfo(UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnCounterAttack); return unit.increaseCombatBonus(4, StatType.Resistance);}, PassiveSkillType.Stance),
+	VengefulFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnCounterAttack, UnitCombatInfo.freeCounterAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
+	BoldFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack, UnitCombatInfo.freeInitiateAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0}),
 	
 	//Weapon Unique Skills
 	InfantryEffective((unit, level) -> 0, PassiveSkillType.Plus),
@@ -70,8 +74,8 @@ public enum PassiveSkill {
 	DragonEffective((unit, level) -> 0, PassiveSkillType.Plus),
 	
 	Firesweep((unit, level) -> 0, PassiveSkillType.Plus),
-	Slaying((unit, level) -> unit.increaseBonusSpecialCharge(), PassiveSkillType.Plus),
-	Wrathful((unit, level) -> unit.increaseBonusSpecialDamage(), PassiveSkillType.Plus);
+	Slaying((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeTotalQuicken), PassiveSkillType.Plus),
+	Wrathful((unit, level) -> unit.addCombatInfo(UnitCombatInfo.specialDamageIncrease), PassiveSkillType.Plus);
 	
 	SkillActivation<Unit, Integer, Integer> skillEffect;
 	PassiveSkillType type;

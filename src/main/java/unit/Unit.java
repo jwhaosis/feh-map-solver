@@ -2,6 +2,7 @@ package unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import global.enums.passiveskills.ActivationPhase;
 import global.enums.passiveskills.PassiveSkill;
@@ -9,6 +10,7 @@ import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
 import global.enums.unitinfo.MoveType;
 import global.enums.unitinfo.StatType;
+import global.enums.unitinfo.UnitCombatInfo;
 import global.enums.unitinfo.UnitType;
 import global.enums.unitinfo.WeaponColor;
 import global.enums.weaponskills.DamageType;
@@ -36,16 +38,9 @@ public class Unit {
 	ArrayList<Integer> allyTurnFieldBonus;
 	ArrayList<Integer> enemyTurnFieldBonus;
 	ArrayList<Integer> combatBonus;
-	
-	public int numInitiateAttacks = 1;
-	public int numCounterAttacks = 1;
-	public int specialCdOnInitiateAttack = 1;
-	public int specialCdOnInitiateDefend = 1;
-	public int specialCdOnCounterAttack = 1;
-	public int specialCdOnCounterDefend = 1;
+	ArrayList<UnitCombatInfo> combatInfo;
+		
 	int currentSpecialCharge = 0;
-	int bonusSpecialCharge = 0;
-	int bonusSpecialDamage = 0;
 	
 	public Unit(String name, MoveType move, UnitType type, int hp, int atk, int spd, int def, int res) {
 		this.ally = true;
@@ -68,13 +63,14 @@ public class Unit {
 		allyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		enemyTurnFieldBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		combatBonus = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
+		combatInfo = new ArrayList<UnitCombatInfo>();
 		baseStat = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0));
 		this.currentHealth = hp;
-		baseStat.add(StatType.Health.index, hp);
-		baseStat.add(StatType.Attack.index, atk);
-		baseStat.add(StatType.Speed.index, spd);
-		baseStat.add(StatType.Defense.index, def);
-		baseStat.add(StatType.Resistance.index, res);
+		baseStat.set(StatType.Health.index, hp);
+		baseStat.set(StatType.Attack.index, atk);
+		baseStat.set(StatType.Speed.index, spd);
+		baseStat.set(StatType.Defense.index, def);
+		baseStat.set(StatType.Resistance.index, res);
 	}
 	
 	public Unit(String name, UnitType type, int hp, int atk, int spd, int def, int res) {
@@ -128,28 +124,47 @@ public class Unit {
 	}
 
 	//setters for unit stats
-	public void increaseCurrentSpecialCharge(boolean thisAttacking, ActivationPhase currentPhase) {
+	public int quickenSpecialChargeBy(boolean thisAttacking, ActivationPhase currentPhase) {
+		UnitCombatInfo specialBoost;
 		if(currentPhase == ActivationPhase.Initiate && thisAttacking) {
-			currentSpecialCharge += specialCdOnInitiateAttack;
+			specialBoost = UnitCombatInfo.chargeOnInitiateAttack;
 		} else if (currentPhase == ActivationPhase.Initiate && !thisAttacking) {
-			currentSpecialCharge += specialCdOnInitiateDefend;
+			specialBoost = UnitCombatInfo.chargeOnInitiateDefend;
 		} else if (currentPhase == ActivationPhase.Counter && thisAttacking) {
-			currentSpecialCharge += specialCdOnCounterAttack;
+			specialBoost = UnitCombatInfo.chargeOnCounterAttack;
 		} else if (currentPhase == ActivationPhase.Counter && !thisAttacking) {
-			currentSpecialCharge += specialCdOnCounterDefend;
+			specialBoost = UnitCombatInfo.chargeOnCounterDefend;
 		} else {
-			currentSpecialCharge += 1;
+			specialBoost = null;
 		}
+		return Math.max(1, Collections.frequency(combatInfo, specialBoost));
 	}
 	
-	public int increaseBonusSpecialCharge() {
-		return bonusSpecialCharge += 1;
+	public int slowEnemySpecialChargeBy() {
+		return Collections.frequency(combatInfo, UnitCombatInfo.reduceChargeGeneration);
 	}
 	
-	public int increaseBonusSpecialDamage() {
-		return bonusSpecialDamage += 10;
+	public int increaseCurrentSpecialCharge(int amount) {
+		return currentSpecialCharge += amount;
 	}
-
+	
+	public int specialDamageBoost() {
+		while(combatInfo.remove(UnitCombatInfo.wrathDamageIncrease));
+		for(int i = 0; i < unitSkillList.size(); i++) {
+			if(unitSkillList.get(i) == PassiveSkill.Wrath) {
+				PassiveSkill.Wrath.activateSkill(this, this, ActivationPhase.Both, unitSkillLevels.get(i));
+			}
+		}
+		return (Collections.frequency(combatInfo, UnitCombatInfo.wrathDamageIncrease) + Collections.frequency(combatInfo, UnitCombatInfo.specialDamageIncrease)) * 10;
+	}
+	
+	public int addCombatInfo(UnitCombatInfo ...info) {
+		for(UnitCombatInfo property : info) {
+			combatInfo.add(property);
+		}
+		return info.length;
+	}
+	
 	//getters for unit skills
 	//TODO: add owl skills in and maybe include the triangle advantage value here
 	public WeaponColor weaponTriangleAdvantage() {
@@ -164,16 +179,6 @@ public class Unit {
 		}
 	}
 	
-	public int activateSpecial(Unit enemy, boolean thisAttacking) {
-		int specialDamage = special.activateSkill(this, enemy, thisAttacking, currentSpecialCharge + bonusSpecialCharge);
-		if(specialDamage != -1) {
-			currentSpecialCharge = 0;
-			return specialDamage;
-		} else {
-			return 0;
-			//return -1;
-		}
-	}
 	public WeaponType weaponType() {
 		return weaponType;
 	}
@@ -198,12 +203,13 @@ public class Unit {
 	
 	//setters for unit skills
 	public Unit addSkill(PassiveSkillSlot slot, PassiveSkill skill) {
-		unitSkillList.add(slot.index, skill);
+		unitSkillList.set(slot.index, skill);
+		unitSkillLevels.set(slot.index, defaultSkillLevel);
 		return this;
 	}
 	public Unit addSkill(PassiveSkillSlot slot, PassiveSkill skill, int level) {
-		unitSkillList.add(slot.index, skill);
-		unitSkillLevels.add(slot.index, level);
+		unitSkillList.set(slot.index, skill);
+		unitSkillLevels.set(slot.index, level);
 		return this;
 	}
 	
@@ -220,14 +226,7 @@ public class Unit {
 	public void ownTurnActionClear() {
 		enemyTurnFieldBonus.replaceAll(bonus -> bonus*0);
 		combatBonus.replaceAll(bonus -> bonus*0);
-		numInitiateAttacks = 1;
-		numCounterAttacks = 1;
-		specialCdOnInitiateAttack = 1;
-		specialCdOnInitiateDefend = 1;
-		specialCdOnCounterAttack = 1;
-		specialCdOnCounterDefend = 1;
-		bonusSpecialCharge = 0;
-		bonusSpecialDamage = 0;
+		combatInfo.clear();
 	}
 	
 	public void ownTurnStartClear() {
@@ -241,11 +240,22 @@ public class Unit {
 	}
 	
 	public void activateSkills(Unit enemy, ActivationPhase currentPhase) {
-		for(int i = 0; i < unitSkillList.size()-1; i++) {
+		for(int i = 0; i < unitSkillList.size(); i++) {
 			unitSkillList.get(i).activateSkill(this, enemy, currentPhase, unitSkillLevels.get(i));
 		}
 	}
 	
+	public int activateSpecial(Unit enemy, boolean thisAttacking) {
+		int specialDamage = special.activateSkill(this, enemy, thisAttacking, currentSpecialCharge + Collections.frequency(combatInfo, UnitCombatInfo.chargeTotalQuicken));
+		if(specialDamage != -1) {
+			currentSpecialCharge = 0;
+			return specialDamage;
+		} else {
+			return 0;
+			//return -1;
+		}
+	}
+
 	public boolean isEffectiveAgainst(MoveType move) {
 		if(move.isMoveType(MoveType.Infantry) && unitSkillList.contains(PassiveSkill.InfantryEffective) ) {
 			return true;

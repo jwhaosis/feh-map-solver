@@ -40,8 +40,8 @@ public class CombatAction {
 			return resultAppender.toString();
 		}
 		
-		whacker.increaseCurrentSpecialCharge(true, currentPhase);
-		sandbag.increaseCurrentSpecialCharge(false, currentPhase);
+		whacker.increaseCurrentSpecialCharge(Math.max(0, whacker.quickenSpecialChargeBy(true, currentPhase) - sandbag.slowEnemySpecialChargeBy()));
+		sandbag.increaseCurrentSpecialCharge(Math.max(0, sandbag.quickenSpecialChargeBy(false, currentPhase) - whacker.slowEnemySpecialChargeBy()));
 		
 		return resultString;
 	}
@@ -85,6 +85,7 @@ public class CombatAction {
 		int roundedDamage = (int) (atk * effectivenessBonus) 
 					+ (int) (Math.floor(atk * effectivenessBonus) * triangleBonus)
 					+ specialDamage
+					+ whacker.specialDamageBoost()
 					- def
 					- fortMitigation;
 
