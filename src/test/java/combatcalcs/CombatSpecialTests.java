@@ -206,4 +206,15 @@ public class CombatSpecialTests {
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
 	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 25), "The combat result is inconsistant, 25 damage should have been dealt.");
 	}
+	
+	@Test
+	public void shouldCheckRequiredSpecialCharge() {
+	    Unit ally = new Unit("Player", 40,10,0,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,10,0);
+	    ally.addSpecial(SpecialSkill.Moonbow);
+	    ally.increaseCurrentSpecialCharge(2);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 3), "The combat result is inconsistant, 3 damage should have been dealt.");
+	}
+
 }

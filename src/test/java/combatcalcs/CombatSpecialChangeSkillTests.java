@@ -10,13 +10,55 @@ import formatting.CombatStrings;
 import global.enums.passiveskills.PassiveSkill;
 import global.enums.passiveskills.PassiveSkillSlot;
 import global.enums.specialskills.SpecialSkill;
-import global.enums.unitinfo.UnitCombatInfo;
 import turn.combat.CombatActionQueue;
 import unit.Unit;
 
 public class CombatSpecialChangeSkillTests {
 	
 //Weapon and Wrath Special Damage Changes
+	@Test
+	public void shouldAddWeaponChargeReduction() {
+	    Unit ally = new Unit("Player", 40,10,0,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+	    ally.addSpecial(SpecialSkill.DraconicAura);
+	    ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Slaying);
+	    ally.increaseCurrentSpecialCharge(2);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+	
+	@Test
+	public void shouldAddWeaponChargeReductionFirstProc() {
+	    Unit ally = new Unit("Player", 40,10,0,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,10,0);
+	    ally.addSpecial(SpecialSkill.Moonbow);
+	    ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Slaying);
+	    ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Slaying);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 3), "The combat result is inconsistant, 3 damage should have been dealt.");
+	}
+
+	@Test
+	public void shouldAddWeaponChargeReductionSecondProc() {
+	    Unit ally = new Unit("Player", 40,10,5,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,10,0);
+	    ally.addSpecial(SpecialSkill.Moonbow);
+	    ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Slaying);
+	    ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Slaying);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 3), "The combat result is inconsistant, 3 damage should have been dealt.");
+	}
+	
+	@Test
+	public void shouldUseBothWeaponChargeAndNaturalCharge() {
+	    Unit ally = new Unit("Player", 40,10,5,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,10,0);
+	    ally.addSpecial(SpecialSkill.Luna);
+	    ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Slaying);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
+	}
+	
 	@Test
 	public void shouldAddWeaponSpecialDamage() {
 	    Unit ally = new Unit("Player", 40,10,0,0,0);
@@ -60,22 +102,34 @@ public class CombatSpecialChangeSkillTests {
 	    ally.increaseCurrentSpecialCharge(3);
 	    ally.takeDamage(10);
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 23), "The combat result is inconsistant, 33 damage should have been dealt.");
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 23), "The combat result is inconsistant, 23 damage should have been dealt.");
 	}
 
 	@Test
 	public void shouldAddWrathSpecialDamageExactlyOnce() {
 	    Unit ally = new Unit("Player", 40,10,5,0,0);
-	    Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,10,0);
 	    ally.addSpecial(SpecialSkill.Moonbow);
 	    ally.addSkill(PassiveSkillSlot.B, PassiveSkill.Wrath);
-	    ally.addCombatInfo(UnitCombatInfo.chargeTotalQuicken);
-	    ally.addCombatInfo(UnitCombatInfo.chargeTotalQuicken);
+	    ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Slaying);
+	    ally.addSkill(PassiveSkillSlot.S, PassiveSkill.Slaying);
 	    ally.takeDamage(10);
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 23), "The combat result is inconsistant, 33 damage should have been dealt.");
+	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
 	}
 
+	@Test 
+	public void shouldRoundDownWrathThreshold() {
+	    Unit ally = new Unit("Player", 41,10,0,0,0);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+	    ally.addSpecial(SpecialSkill.DraconicAura);
+	    ally.addSkill(PassiveSkillSlot.B, PassiveSkill.Wrath);
+	    ally.increaseCurrentSpecialCharge(3);
+	    ally.takeDamage(10);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 13), "The combat result is inconsistant, 13 damage should have been dealt.");
+	}
+	
 	@Test
 	public void shouldAddWeaponAndWrathSpecialDamage() {
 	    Unit ally = new Unit("Player", 40,10,0,0,0);
@@ -86,7 +140,7 @@ public class CombatSpecialChangeSkillTests {
 	    ally.increaseCurrentSpecialCharge(3);
 	    ally.takeDamage(10);
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 33), "The combat result is inconsistant, 23 damage should have been dealt.");
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 33), "The combat result is inconsistant, 33 damage should have been dealt.");
 	}
 	
 
