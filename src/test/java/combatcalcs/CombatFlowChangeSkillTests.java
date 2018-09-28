@@ -222,4 +222,168 @@ public class CombatFlowChangeSkillTests {
         assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
 	}
 
+//Free Initiate and Counter attack skills (Bold/Vengeful + Brash/QR)
+	@Test
+	public void shouldNotGiveFreeInitiateVengeful() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldGiveFreeCounterVengeful() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldGiveFreeCounterVengefulWhenDoubled() {
+		Unit ally = new Unit("Player", 40,10,5,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 6, "Should be 6 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotGiveFreeCounterVengefulUnderThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		enemy.takeDamage(26);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldRoundDownVengefulThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 51,10,0,0,0);
+		enemy.takeDamage(26);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
+	
+	@Test
+	public void shouldGiveFreeInitiateBold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+		
+	@Test
+	public void shouldGiveFreeInitiateBoldWhenDoubled() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,5,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 6, "Should be 6 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldGiveFreeInitiateBoldUnCountered() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBow, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
+	}
+	
+	@Test
+	public void shouldNotGiveFreeCounterBold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotGiveFreeInitiateBoldUnderThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter, 2);
+		ally.takeDamage(21);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
+	@Test
+	public void shouldGiveFreeCounterQR() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.QuickRiposte);
+		enemy.takeDamage(15);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+
+	@Test
+	public void shouldRoundDownBoldThreshold() {
+		Unit ally = new Unit("Player", 41,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter, 2);
+		ally.takeDamage(21);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldRoundDownQRThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 51,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.QuickRiposte);
+		enemy.takeDamage(16);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotGiveFreeInitiateBrashAboveThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrashAssault);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
+	@Test
+	public void shouldGiveFreeInitiateBrashCountered() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrashAssault);
+		ally.takeDamage(20);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotGiveFreeInitiateBrashUnCountered() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.CBow, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrashAssault);
+		ally.takeDamage(20);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldRoundDownBrashThreshold() {
+		Unit ally = new Unit("Player", 41,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrashAssault);
+		ally.takeDamage(20);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
 }

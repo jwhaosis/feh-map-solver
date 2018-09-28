@@ -74,7 +74,7 @@ public class CombatActionQueue {
 						+ (speedDiff >= 5 ? 1 : 0)
 						- attackingUnit.countCombatInfo(UnitCombatInfo.reduceOwnAttackCount) 
 						- defendingUnit.countCombatInfo(UnitCombatInfo.reduceEnemyAttackCount));
-		resultHits[1] = 1 + Math.max(0, defendingUnit.countCombatInfo(UnitCombatInfo.freeInitiateAttack) 
+		resultHits[1] = 1 + Math.max(0, defendingUnit.countCombatInfo(UnitCombatInfo.freeCounterAttack) 
 						+ (speedDiff <= -5 ? 1 : 0)
 						- defendingUnit.countCombatInfo(UnitCombatInfo.reduceOwnAttackCount) 
 						- attackingUnit.countCombatInfo(UnitCombatInfo.reduceEnemyAttackCount));
