@@ -23,8 +23,8 @@ public class CombatActionQueue {
 		this.defendingUnit = defendingUnit;
 		calculatePassiveSkillBonus();
 		int[] totalHits = calculateHits();
-		atkHits = totalHits[0];
-		defHits = totalHits[1];
+		atkHits = Math.min(2, totalHits[0]);
+		defHits = Math.min(2, totalHits[1]);
 	}
 	
 	public LinkedList<String> execute() {
