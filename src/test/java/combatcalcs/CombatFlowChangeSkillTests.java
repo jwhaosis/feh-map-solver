@@ -33,72 +33,6 @@ public class CombatFlowChangeSkillTests {
 	   	assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
 	}
 		
-//Triangle Adept
-	@Test
-	public void shouldApplyTriangleAdeptOnTriangleAdvantage() {
-		Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-		assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 14), "The combat result is inconsistant, 14 damage should have been dealt.");
-	}
-		
-	@Test
-	public void shouldApplyTriangleAdeptOnTriangleDisadvantage() {
-		Unit ally = new Unit("Player", UnitType.Axe, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-		assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
-	}
-		
-	@Test
-	public void shouldDisableTriangleAdeptWithNoTriangle() {
-		Unit ally = new Unit("Player", 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-		assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
-	}
-		
-	@Test
-	public void shouldApplyHigherRankedTriangleAdeptIfOnAlly() {
-		Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept, 3);
-		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept, 1);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-		assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 14), "The combat result is inconsistant, 14 damage should have been dealt.");
-	}
-		
-	@Test
-	public void shouldApplyHigherRankedTriangleAdeptIfOnEnemy() {
-		Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept, 1);
-		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept, 3);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 14), "The combat result is inconsistant, 14 damage should have been dealt.");
-	}
-
-	@Test
-	public void shouldApplyTriangleAdeptOnInitiateAsWhacker() {
-		Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,0,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 14), "The combat result is inconsistant, 14 damage should have been dealt.");
-	}
-		
-	@Test
-	public void shouldApplyTriangleAdeptOnCounterAsWhacker() {
-		Unit ally = new Unit("Player", UnitType.Lance, 40,10,0,0,0);
-		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,10,0,0,0);
-		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.TriangleAdept);
-		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
-	}
-
 //Sweep Skills
 	@Test
 	public void shouldNotSweepWithoutSpeedAdvantage() {
@@ -385,5 +319,46 @@ public class CombatFlowChangeSkillTests {
 		ally.takeDamage(20);
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+//TODO: Priority Change Skill Tests (Vantage/Desperation)
+	@Test
+	public void shouldGiveDesperationPriorityInitiateOnDouble() {
+		
+	}
+	
+	@Test
+	public void shouldNotGiveDesperationFreeDouble() {
+		
+	}
+	
+	@Test
+	public void shouldNotGiveDesperationPriorityInitiateAboveThreshold() {
+		
+	}
+
+	@Test
+	public void shouldNotGiveDesperationPriorityCounter() {
+		
+	}
+	
+	@Test
+	public void shouldGiveVantagePriorityCounter() {
+		
+	}
+	
+	@Test
+	public void shouldNotGiveVantageFreeDouble() {
+		
+	}
+	
+	@Test
+	public void shouldNotGiveVantagePriorityCounterAboveThreshold() {
+		
+	}
+
+	@Test
+	public void shouldNotGiveVantagePriorityInitiate() {
+		
 	}
 }
