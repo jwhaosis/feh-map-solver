@@ -2,6 +2,8 @@ package global.enums.unitinfo;
 
 public enum UnitCombatInfo {
 	
+	effectiveDamage,
+	
 	chargeTotalQuicken,
 	chargeOnInitiateAttack,
 	chargeOnInitiateDefend,

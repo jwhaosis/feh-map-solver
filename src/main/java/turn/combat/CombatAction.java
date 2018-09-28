@@ -5,6 +5,7 @@ import java.lang.StringBuilder;
 import formatting.CombatStrings;
 import global.enums.passiveskills.ActivationPhase;
 import global.enums.unitinfo.StatType;
+import global.enums.unitinfo.UnitCombatInfo;
 import unit.Unit;
 
 public class CombatAction {
@@ -61,7 +62,7 @@ public class CombatAction {
 		double triangleBonus = 0;
 
 		//effectiveness weapons
-		if(whacker.isEffectiveAgainst(sandbag.moveType)) {
+		if(whacker.countCombatInfo(UnitCombatInfo.effectiveDamage) != 0) {
 			effectivenessBonus = 1.5;
 		}
 

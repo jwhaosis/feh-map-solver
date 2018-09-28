@@ -11,6 +11,7 @@ public enum PassiveSkillType {
 	Empty((unit, enemy, stat, phase, threshold, qualifier) -> false),
 
 	Plus((unit, enemy, phase, stat, threshold, qualifier) -> true),
+	Effective((unit, enemy, phase, stat, threshold, qualifier) -> enemy.moveType.isMoveType(qualifier)),
 	Nullify((unit, enemy, phase, stat, threshold, qualifier) -> true),
 	Triangle((unit, enemy, phase, stat, threshold, qualifier) -> true),
 

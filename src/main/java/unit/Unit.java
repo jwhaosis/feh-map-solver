@@ -267,20 +267,6 @@ public class Unit {
 			//return -1;
 		}
 	}
-
-	public boolean isEffectiveAgainst(MoveType move) {
-		if(move.isMoveType(MoveType.Infantry) && unitSkillList.contains(PassiveSkill.InfantryEffective) ) {
-			return true;
-		} else if(move.isMoveType(MoveType.Cavalry) && unitSkillList.contains(PassiveSkill.CavalryEffective) ) {
-			return true;
-		} else if(move.isMoveType(MoveType.Flier) && unitSkillList.contains(PassiveSkill.FlierEffective) ) {
-			return true;
-		} else if(move.isMoveType(MoveType.Armor) && unitSkillList.contains(PassiveSkill.ArmorEffective) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	public double triangleAdeptBonus() {
 		int index = unitSkillList.lastIndexOf(PassiveSkill.TriangleAdept);

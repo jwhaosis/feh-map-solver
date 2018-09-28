@@ -84,11 +84,11 @@ public enum PassiveSkill {
 	SpecialFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnCounterAttack, UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnInitiateAttack, UnitCombatInfo.chargeOnInitiateAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
 	
 	//Weapon Unique Skills
-	InfantryEffective((unit, level) -> 1, PassiveSkillType.Plus),
-	FlierEffective((unit, level) -> 1, PassiveSkillType.Plus),
-	CavalryEffective((unit, level) -> 1, PassiveSkillType.Plus),
-	ArmorEffective((unit, level) -> 1, PassiveSkillType.Plus),
-	DragonEffective((unit, level) -> 1, PassiveSkillType.Plus),
+	InfantryEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 0),
+	CavalryEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 1),
+	FlierEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 2),
+	ArmorEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 3),
+	DragonEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 4),
 	
 	Firesweep((unit, level) -> 1, PassiveSkillType.Plus),
 	Slaying((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeTotalQuicken), PassiveSkillType.Plus),
