@@ -5,10 +5,8 @@ import java.util.LinkedList;
 
 import formatting.CombatStrings;
 import global.enums.passiveskills.ActivationPhase;
-import global.enums.passiveskills.PassiveSkill;
 import global.enums.unitinfo.StatType;
 import global.enums.unitinfo.UnitCombatInfo;
-import global.enums.unitinfo.UnitType;
 import unit.Unit;
 
 public class CombatActionQueue {
@@ -57,7 +55,7 @@ public class CombatActionQueue {
 		if(checkCounterPrioritySkill()) {
 			resultQueue.add(enqueueCounter());
 		}
-		if(checkAttackPrioritySkill()) {
+		if(checkInitiatePrioritySkill()) {
 			resultQueue.add(enqueueAttack());
 		}
 		while(atkHits>0 || defHits>0) {
@@ -73,18 +71,14 @@ public class CombatActionQueue {
 		int speedDiff = attackingUnit.getStat(StatType.Speed) - defendingUnit.getStat(StatType.Speed);
 		
 		resultHits[0] = 1 + Math.max(0, attackingUnit.countCombatInfo(UnitCombatInfo.freeInitiateAttack) 
+						+ (speedDiff >= 5 ? 1 : 0)
 						- attackingUnit.countCombatInfo(UnitCombatInfo.reduceOwnAttackCount) 
 						- defendingUnit.countCombatInfo(UnitCombatInfo.reduceEnemyAttackCount));
 		resultHits[1] = 1 + Math.max(0, defendingUnit.countCombatInfo(UnitCombatInfo.freeInitiateAttack) 
+						+ (speedDiff <= -5 ? 1 : 0)
 						- defendingUnit.countCombatInfo(UnitCombatInfo.reduceOwnAttackCount) 
 						- attackingUnit.countCombatInfo(UnitCombatInfo.reduceEnemyAttackCount));
 		
-		if(speedDiff >= 5) {
-			resultHits[0] += 1;
-		} else if (speedDiff <= -5) {
-			resultHits[1] += 1;
-		}
-
 		if(!checkAllowCounter(attackingUnit, defendingUnit, ActivationPhase.Initiate)) {
 			resultHits[1] = 0;
 		}
@@ -112,49 +106,25 @@ public class CombatActionQueue {
 	}
 
 	public static boolean checkAllowCounter(Unit attacker, Unit defender, ActivationPhase phase) {
-		PassiveSkill sweep = defender.weaponType().damageType.identifier == 1 ? PassiveSkill.Windsweep : PassiveSkill.Watersweep;
-		if(attacker.checkSkillActivation(defender, phase, sweep) != 0) {
+		if(attacker.countCombatInfo(UnitCombatInfo.preventCounter) != 0) {
 			return false;
 		}
-		if(defender.checkSkillActivation(defender, ActivationPhase.Counter, PassiveSkill.AllRangeCounter) != 0 || defender.weaponType().range == attacker.weaponType().range) {
+		if(defender.countCombatInfo(UnitCombatInfo.allRangeCounter) != 0 || defender.weaponType().range == attacker.weaponType().range) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public static void checkBreaker(Unit attacker, Unit defender) {
-		PassiveSkill breaker;
-		if(defender.type == UnitType.Sword) {
-			breaker = PassiveSkill.Swordbreaker;
-		} else if (defender.type == UnitType.Lance) {
-			breaker = PassiveSkill.Lancebreaker;
-		} else if (defender.type == UnitType.Axe) {
-			breaker = PassiveSkill.Lancebreaker;
-		} else if (defender.type == UnitType.CBow) {
-			breaker = PassiveSkill.CBowbreaker;
-		} else if (defender.type == UnitType.CDagger) {
-			breaker = PassiveSkill.CDaggerbreaker;
-		} else if (defender.type == UnitType.RTome) {
-			breaker = PassiveSkill.RTomebreaker;
-		} else if (defender.type == UnitType.BTome) {
-			breaker = PassiveSkill.BTomebreaker;
-		} else if (defender.type == UnitType.GTome) {
-			breaker = PassiveSkill.GTomebreaker;
-		} else {
-			breaker = PassiveSkill.Empty;
-		}
-	}
-	
-	private boolean checkAttackPrioritySkill() {
-		return attackingUnit.checkSkillActivation(defendingUnit, ActivationPhase.Initiate, PassiveSkill.Desperation) != 0;
+		
+	private boolean checkInitiatePrioritySkill() {
+		return attackingUnit.countCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack) != 0;
 	}
 
 	private boolean checkCounterPrioritySkill() {
 		if (!checkAllowCounter(attackingUnit, defendingUnit, ActivationPhase.Initiate)) {
 			return false;
 		} else {
-			return defendingUnit.checkSkillActivation(attackingUnit, ActivationPhase.Counter, PassiveSkill.Vantage) != 0;
+			return defendingUnit.countCombatInfo(UnitCombatInfo.freeCounterPriorityAttack) != 0;
 		}
 	}
 	

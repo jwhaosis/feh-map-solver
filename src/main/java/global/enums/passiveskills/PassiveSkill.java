@@ -16,7 +16,7 @@ public enum PassiveSkill {
 	Spd((unit, level) -> unit.increaseCombatBonus(level, StatType.Speed), PassiveSkillType.Plus),
 	Def((unit, level) -> unit.increaseCombatBonus(level, StatType.Defense), PassiveSkillType.Plus),
 	Res((unit, level) -> unit.increaseCombatBonus(level, StatType.Resistance), PassiveSkillType.Plus),
-	AllRangeCounter((unit, level) -> 1, PassiveSkillType.Plus),
+	AllRangeCounter((unit, level) -> unit.addCombatInfo(UnitCombatInfo.allRangeCounter), PassiveSkillType.Plus),
 	TriangleAdept((unit, level) -> 5 + 5 * level, PassiveSkillType.Plus),
 	
 	//Blows, Stances, and Defenses
@@ -28,8 +28,8 @@ public enum PassiveSkill {
 	DartingStance((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Speed), PassiveSkillType.Stance),
 	SturdyStance((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense), PassiveSkillType.Stance),
 	WardingStance((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Stance),
-	CloseDefense((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense) + unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Defense, StatType.Health, new int[] {1,1,1}),
-	DistantDefense((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense) + unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Defense, StatType.Health, new int[] {2,2,2}),
+	CloseDefense((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense) + unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Defense, 1),
+	DistantDefense((unit, level) -> unit.increaseCombatBonus(2*level, StatType.Defense) + unit.increaseCombatBonus(2*level, StatType.Resistance), PassiveSkillType.Defense, 2),
 	
 	//Brazens
 	BrazenAtkSpd((unit, level) -> unit.increaseCombatBonus(1 + 2*level, StatType.Attack) + unit.increaseCombatBonus(1 + 2*level, StatType.Speed), PassiveSkillType.Brazen, StatType.Health, new int[] {80,80,80}),
@@ -56,8 +56,8 @@ public enum PassiveSkill {
 	HeavyBlade((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack,UnitCombatInfo.chargeOnCounterAttack), PassiveSkillType.Blade, StatType.Attack, new int[] {5,3,1}),
 	FlashingBlade((unit, level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack,UnitCombatInfo.chargeOnCounterAttack), PassiveSkillType.Blade, StatType.Speed, new int[] {5,3,1}),
 	
-	Windsweep((unit, level) -> unit.addCombatInfo(UnitCombatInfo.reduceOwnAttackCount), PassiveSkillType.Sweep, StatType.Speed, new int[] {5,3,1}),
-	Watersweep((unit, level) -> unit.addCombatInfo(UnitCombatInfo.reduceOwnAttackCount), PassiveSkillType.Sweep, StatType.Speed, new int[] {5,3,1}),
+	Windsweep((unit, level) -> unit.addCombatInfo(UnitCombatInfo.preventCounter), PassiveSkillType.Sweep, StatType.Speed, new int[] {5,3,1}, 1),
+	Watersweep((unit, level) -> unit.addCombatInfo(UnitCombatInfo.preventCounter), PassiveSkillType.Sweep, StatType.Speed, new int[] {5,3,1}, 2),
 
 	Desperation((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
 	Vantage((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
@@ -65,14 +65,14 @@ public enum PassiveSkill {
 	QuickRiposte((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeCounterAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,80,70}),
 	WaryFighter((unit, level) -> unit.addCombatInfo(UnitCombatInfo.reduceOwnAttackCount, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
 	
-	Swordbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	Lancebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	Axebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	CBowbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	CDaggerbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	RTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	BTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
-	GTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
+	Swordbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 1),
+	Lancebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 2),
+	Axebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 3),
+	RTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 13),
+	BTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 14),
+	GTomebreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 15),
+	CBowbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 17),
+	CDaggerbreaker((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack, UnitCombatInfo.freeCounterAttack, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}, 18),
 
 	//Special Charge Altering Skillspe.Undamaged, StatType.Health, new int[] {90,70,50}),
 	Guard((unit,level) -> unit.addCombatInfo(UnitCombatInfo.reduceChargeGeneration), PassiveSkillType.Undamaged, StatType.Health, new int[] {100,90,80}),
@@ -98,21 +98,31 @@ public enum PassiveSkill {
 	PassiveSkillType type;
 	StatType stat;
 	int[] threshold;
+	int qualifier;
 	
 	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type){
-		this(activation, type, StatType.None, new int[] {0,0,0});
+		this(activation, type, StatType.None, new int[] {0,0,0}, 0);
+	}
+
+	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type, int qualifier){
+		this(activation, type, StatType.None, new int[] {0,0,0}, qualifier);
 	}
 	
 	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type, StatType stat, int[] threshold){
+		this(activation, type, StatType.None, threshold, 0);
+	}
+
+	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type, StatType stat, int[] threshold, int qualifier){
 		this.skillEffect = activation;
 		this.type = type;
 		this.stat = stat;
 		this.threshold = threshold;
+		this.qualifier = qualifier;
 	}
 
 	
 	public int activateSkill(Unit unit, Unit enemy, ActivationPhase currentPhase, int level) {
-		if(type.isActive(unit, enemy, currentPhase, stat, threshold[level - 1])) {
+		if(type.isActive(unit, enemy, currentPhase, stat, threshold[level - 1], qualifier)) {
 			return skillEffect.apply(unit, level);
 		} else {
 			return 0;

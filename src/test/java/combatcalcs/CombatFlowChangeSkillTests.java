@@ -165,4 +165,61 @@ public class CombatFlowChangeSkillTests {
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
 	}
+	
+	@Test
+	public void shouldNotDoubleWithWindsweepOnInitiateOnProc() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotDoubleWithWindsweepOnInitiateOnNoProc() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.RBreath, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, the enemy should be attacking.");
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
+	@Test
+	public void shouldNotDoubleWithWatersweepOnInitiateOnProc() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.RBreath, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldNotDoubleWithWatersweepOnInitiateOnNoProc() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", UnitType.Sword, 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, the enemy should be attacking.");
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldDoubleWithWindsweepOnCounter() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Windsweep);
+		LinkedList<String> testOutput = new CombatActionQueue(enemy, ally).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+
+	@Test
+	public void shouldDoubleWithWatersweepOnCounter() {
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Watersweep);
+		LinkedList<String> testOutput = new CombatActionQueue(enemy, ally).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+
 }

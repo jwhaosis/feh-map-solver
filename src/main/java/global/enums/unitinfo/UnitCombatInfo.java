@@ -20,6 +20,6 @@ public enum UnitCombatInfo {
 	reduceOwnAttackCount,
 	reduceEnemyAttackCount,
 	
-	preventCounterPhysical,
-	preventCounterMagical,
+	preventCounter,
+	allRangeCounter,
 }

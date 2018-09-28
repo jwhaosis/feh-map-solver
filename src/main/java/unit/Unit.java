@@ -249,7 +249,11 @@ public class Unit {
 	
 	public void activateSkills(Unit enemy, ActivationPhase currentPhase) {
 		for(int i = 0; i < unitSkillList.size(); i++) {
-			unitSkillList.get(i).activateSkill(this, enemy, currentPhase, unitSkillLevels.get(i));
+			PassiveSkill skill = unitSkillList.get(i);
+			skill.activateSkill(this, enemy, currentPhase, unitSkillLevels.get(i));
+			if(currentPhase == ActivationPhase.Initiate && (skill == PassiveSkill.Windsweep || skill == PassiveSkill.Watersweep)) {
+				addCombatInfo(UnitCombatInfo.reduceOwnAttackCount);
+			}
 		}
 	}
 	
@@ -278,10 +282,10 @@ public class Unit {
 		}
 	}
 	
-	public int checkSkillActivation(Unit enemy, ActivationPhase phase, PassiveSkill skill) {
-		int index = unitSkillList.lastIndexOf(skill);
+	public double triangleAdeptBonus() {
+		int index = unitSkillList.lastIndexOf(PassiveSkill.TriangleAdept);
 		if(index != -1) {
-			return skill.activateSkill(this, enemy, phase, unitSkillLevels.get(index));
+			return PassiveSkill.TriangleAdept.activateSkill(this, this, ActivationPhase.Both, unitSkillLevels.get(index)) / 100.0;
 		} else {
 			return 0;
 		}
