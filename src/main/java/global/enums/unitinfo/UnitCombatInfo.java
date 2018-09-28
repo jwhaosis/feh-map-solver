@@ -17,7 +17,8 @@ public enum UnitCombatInfo {
 	freeCounterPriorityAttack,
 	
 	reduceChargeGeneration,
-	reduceAttackCount,
+	reduceOwnAttackCount,
+	reduceEnemyAttackCount,
 	
 	preventCounterPhysical,
 	preventCounterMagical,

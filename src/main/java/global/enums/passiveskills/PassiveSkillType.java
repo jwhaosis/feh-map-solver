@@ -3,6 +3,7 @@ package global.enums.passiveskills;
 import global.enums.unitinfo.StatType;
 import global.interfaces.skillinfo.SkillCondition;
 import map.GameMap;
+import turn.combat.CombatActionQueue;
 import unit.Unit;
 
 public enum PassiveSkillType {
@@ -22,11 +23,13 @@ public enum PassiveSkillType {
 	
 	Boost((unit, enemy, phase, stat, threshold) -> unit.currentHealth() >= (enemy.currentHealth() + threshold)),
 	Blade((unit, enemy, phase, stat, threshold) -> unit.getStat(stat) >= (enemy.getStat(stat) + threshold)),
+	Sweep((unit, enemy, phase, stat, threshold) -> unit.getStat(stat) >= (enemy.getStat(stat) + threshold) && phase.isActive(ActivationPhase.Initiate)),
 	
 	Bond((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
 	Solo((unit, enemy, phase, stat, threshold) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
 		
 	Damaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
+	Brash((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold && CombatActionQueue.checkAllowCounter(unit, enemy, phase)),
 	Undamaged((unit, enemy, phase, stat, threshold) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) >= threshold);
 
 	private SkillCondition<Unit, Unit, ActivationPhase, StatType, Integer, Boolean> condition;

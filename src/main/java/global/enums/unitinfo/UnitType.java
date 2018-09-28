@@ -36,12 +36,12 @@ public enum UnitType {
 	
 	
 	public WeaponColor color;
-	public WeaponType type;
+	public WeaponType weaponType;
 	public WeaponSkill weapon;
 	
-	UnitType(WeaponColor color, WeaponType type, WeaponSkill weapon){
+	UnitType(WeaponColor color, WeaponType weaponType, WeaponSkill weapon){
 		this.color = color;
-		this.type = type;
+		this.weaponType = weaponType;
 		this.weapon = weapon;
 	}
 }

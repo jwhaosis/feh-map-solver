@@ -4,6 +4,7 @@ import java.lang.StringBuilder;
 
 import formatting.CombatStrings;
 import global.enums.passiveskills.ActivationPhase;
+import global.enums.passiveskills.PassiveSkill;
 import global.enums.unitinfo.StatType;
 import unit.Unit;
 
@@ -66,10 +67,11 @@ public class CombatAction {
 		}
 
 		//triangle adept and triangle advantage
-		if(whacker.weaponTriangleAdvantage() == sandbag.color) {
-			triangleBonus = 0.2 + Math.max(whacker.triangleAdeptBonus(), sandbag.triangleAdeptBonus());
-		} else if (whacker.color == sandbag.weaponTriangleAdvantage()) {
-			triangleBonus = -(0.2 + Math.max(whacker.triangleAdeptBonus(), sandbag.triangleAdeptBonus()));
+		double triangleAdept = Math.max(whacker.checkSkillActivation(sandbag, ActivationPhase.Initiate, PassiveSkill.TriangleAdept), sandbag.checkSkillActivation(whacker, ActivationPhase.Counter, PassiveSkill.TriangleAdept)) / 100.0;
+		if(whacker.hasWeaponTriangleAdvantage(sandbag.type.color)) {
+			triangleBonus = 0.2 + triangleAdept;
+		} else if (sandbag.hasWeaponTriangleAdvantage(whacker.type.color)) {
+			triangleBonus = - (0.2 + triangleAdept);
 		} else {
 			triangleBonus = 0;
 		}

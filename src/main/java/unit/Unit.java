@@ -24,10 +24,10 @@ public class Unit {
 	public final String name;
 	public final MoveType moveType;
 	final ArrayList<Integer> baseStat;
-
-	public final WeaponColor color;	
-	WeaponType weaponType;
+	
+	public final UnitType type;
 	WeaponSkill weapon;
+	
 	//Skill assist;
 	SpecialSkill special;
 	final ArrayList<PassiveSkill> unitSkillList;
@@ -55,8 +55,7 @@ public class Unit {
 		this.name = name;
 		this.moveType = move;
 		
-		this.color = type.color;
-		this.weaponType = type.type;
+		this.type = type;
 		this.weapon(type.weapon);
 		
 		this.special = SpecialSkill.Default;
@@ -116,7 +115,7 @@ public class Unit {
 			return StatType.Defense;
 		} else if(damageType == DamageType.Magical) {
 			return StatType.Resistance;
-		} else if(damageType == DamageType.Adaptive && this.weaponType.range == 2) {
+		} else if(damageType == DamageType.Adaptive && this.type.weaponType.range == 2) {
 			return ((getStat(StatType.Defense) < getStat(StatType.Resistance)) ? StatType.Defense : StatType.Resistance);
 		} else /*if(whackerType == DamageType.Adaptive && sandbag.weapon().range() == 1)*/ {
 			return StatType.Resistance;
@@ -165,22 +164,26 @@ public class Unit {
 		return info.length;
 	}
 	
+	public int countCombatInfo(UnitCombatInfo info) {
+		return Collections.frequency(combatInfo, info);
+	}
+	
 	//getters for unit skills
 	//TODO: add owl skills in and maybe include the triangle advantage value here
-	public WeaponColor weaponTriangleAdvantage() {
-		if(color == WeaponColor.Red) {
-			return WeaponColor.Green;
-		} else if(color == WeaponColor.Blue) {
-			return WeaponColor.Red;
-		} else if(color == WeaponColor.Green) {
-			return WeaponColor.Blue;
+	public boolean hasWeaponTriangleAdvantage(WeaponColor color) {
+		if(type.color == WeaponColor.Red) {
+			return color == WeaponColor.Green;
+		} else if(type.color == WeaponColor.Blue) {
+			return color == WeaponColor.Red;
+		} else if(type.color == WeaponColor.Green) {
+			return color == WeaponColor.Blue;
 		} else {
-			return WeaponColor.None;
+			return false;
 		}
 	}
 	
 	public WeaponType weaponType() {
-		return weaponType;
+		return type.weaponType;
 	}
 	public WeaponSkill weapon() {
 		return weapon;
@@ -207,10 +210,15 @@ public class Unit {
 		unitSkillLevels.set(slot.index, defaultSkillLevel);
 		return this;
 	}
+	
 	public Unit addSkill(PassiveSkillSlot slot, PassiveSkill skill, int level) {
 		unitSkillList.set(slot.index, skill);
 		unitSkillLevels.set(slot.index, level);
 		return this;
+	}
+	
+	public int getSkillSlot(PassiveSkill skill) {
+		return unitSkillList.indexOf(skill);
 	}
 	
 	public SpecialSkill getSpecial() {
@@ -270,25 +278,12 @@ public class Unit {
 		}
 	}
 	
-	public boolean hasAllRangeCounter() {
-		return unitSkillList.contains(PassiveSkill.AllRangeCounter);
-	}
-	
-	public double triangleAdeptBonus() {
-		int index = unitSkillList.lastIndexOf(PassiveSkill.TriangleAdept);
+	public int checkSkillActivation(Unit enemy, ActivationPhase phase, PassiveSkill skill) {
+		int index = unitSkillList.lastIndexOf(skill);
 		if(index != -1) {
-			return PassiveSkill.TriangleAdept.activateSkill(this, this, ActivationPhase.Both, unitSkillLevels.get(index)) / 100.0;
+			return skill.activateSkill(this, enemy, phase, unitSkillLevels.get(index));
 		} else {
 			return 0;
-		}
-	}
-	
-	public boolean enableSweep(Unit enemy) {
-		int index = enemy.weaponType.damageType.identifier == 1 ? unitSkillList.lastIndexOf(PassiveSkill.Windsweep) : unitSkillList.lastIndexOf(PassiveSkill.Watersweep);
-		if(index != -1) {
-			return unitSkillList.get(index).activateSkill(this, enemy, ActivationPhase.Initiate, unitSkillLevels.get(index)) == 0;
-		} else {
-			return false;
 		}
 	}
 }
