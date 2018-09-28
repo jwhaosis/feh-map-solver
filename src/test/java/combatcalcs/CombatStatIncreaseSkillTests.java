@@ -26,7 +26,7 @@ public class CombatStatIncreaseSkillTests {
     }
 	
 	@Test
-    public void shouldApplyPlusSkillBonusOnCounter() {
+    public void shouldApplyPlusSkillDefenseBonusOnCounter() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Def);
@@ -34,6 +34,15 @@ public class CombatStatIncreaseSkillTests {
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 7), "The combat result is inconsistant, 7 damage should have been dealt.");
     }
 	
+	@Test
+    public void shouldApplyPlusSkillResistanceBonusOnCounter() {
+    	Unit ally = new Unit("Player", UnitType.RBreath, 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Res);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 7), "The combat result is inconsistant, 7 damage should have been dealt.");
+    }
+
 	@Test
     public void shouldApplySpeedBonus() {
     	Unit ally = new Unit("Player", 40,10,2,0,0);
@@ -167,10 +176,28 @@ public class CombatStatIncreaseSkillTests {
     }
 	
 	@Test
-    public void shouldApplyBlowBonusOnInitiateAsSandbag() {
+    public void shouldApplyBlowSpeedBonus() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.DartingBlow);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+    }
+
+	@Test
+    public void shouldApplyDefenseBlowBonusOnInitiateAsSandbag() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
     	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.ArmoredBlow);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
+    }
+	
+	@Test
+    public void shouldApplyResistanceBlowBonusOnInitiateAsSandbag() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", UnitType.RBreath, 50,10,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WardingBlow);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
     }
@@ -193,7 +220,16 @@ public class CombatStatIncreaseSkillTests {
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
     }
 
-//Stance Skills
+//Stance and Breath Skills
+	@Test
+    public void shouldApplyStanceSpeedBonus() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.DartingStance);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+    }
+
 	@Test
     public void shouldDisableStanceBonusOnInitiateAsWhacker() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
@@ -211,7 +247,7 @@ public class CombatStatIncreaseSkillTests {
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
     }
-
+	
 	@Test
     public void shouldApplyStanceBonusOnCounterAsWhacker() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
@@ -220,14 +256,41 @@ public class CombatStatIncreaseSkillTests {
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
     }
-	
+		
 	@Test
-    public void shouldApplyStanceBonusOnCounterAsSandbag() {
+    public void shouldApplyStanceDefenseBonusOnCounterAsSandbag() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
     	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.SturdyStance);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
+    }
+	
+	@Test
+    public void shouldApplyBreathDefenseBonusOnCounterAsSandbag() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.SteadyBreath);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
+    }
+	
+	@Test
+    public void shouldApplyStanceResistanceBonusOnCounterAsSandbag() {
+    	Unit ally = new Unit("Player", UnitType.RBreath, 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.WardingStance);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
+    }
+	
+	@Test
+    public void shouldApplyBreathResistanceBonusOnCounterAsSandbag() {
+    	Unit ally = new Unit("Player", UnitType.RBreath, 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.WardingBreath);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 6), "The combat result is inconsistant, 6 damage should have been dealt.");
     }
 
 //Defense Skills
@@ -276,7 +339,6 @@ public class CombatStatIncreaseSkillTests {
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
     }
 
-
 //Brazen Skills
 	@Test
     public void shouldDisableBrazenAboveThreshold() {
@@ -295,6 +357,16 @@ public class CombatStatIncreaseSkillTests {
     	ally.takeDamage(8);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
+    }
+
+	@Test
+    public void shouldApplyBrazenSpeedBonus() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenSpdRes);
+    	ally.takeDamage(8);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
     }
 
 	@Test
@@ -321,7 +393,7 @@ public class CombatStatIncreaseSkillTests {
     public void shouldApplyBrazenBonusOnCounterAsWhacker() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenAtkDef);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenAtkSpd);
     	enemy.takeDamage(10);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 7), "The combat result is inconsistant, 7 damage should have been dealt.");
@@ -331,12 +403,12 @@ public class CombatStatIncreaseSkillTests {
     public void shouldApplyBrazenBonusOnCounterAsSandbag() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenAtkDef);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenSpdDef);
     	enemy.takeDamage(10);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 3), "The combat result is inconsistant, 3 damage should have been dealt.");
     }
-
+	
 //Push Skills
 	@Test
 	public void shouldDisablePushBelowThreshold() {
@@ -352,9 +424,18 @@ public class CombatStatIncreaseSkillTests {
     public void shouldApplyPushBonusOnInitiate() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.AtkDefPush);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.AtkSpdPush);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 15), "The combat result is inconsistant, 15 damage should have been dealt.");
+    }
+	
+	@Test
+    public void shouldApplyPushSpeedBonus() {
+    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.SpdDefPush);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
     }
 	
 	@Test
@@ -370,7 +451,7 @@ public class CombatStatIncreaseSkillTests {
     public void shouldApplyPushBonusOnCounterAsWhacker() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AtkDefPush);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AtkResPush);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
     }
@@ -379,7 +460,7 @@ public class CombatStatIncreaseSkillTests {
     public void shouldApplyPushBonusOnCounterAsSandbag() {
     	Unit ally = new Unit("Player", 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.AtkDefPush);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.DefResPush);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 5), "The combat result is inconsistant, 5 damage should have been dealt.");
     }
@@ -444,6 +525,14 @@ public class CombatStatIncreaseSkillTests {
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, 10 damage should have been dealt.");
     }
 	
+	@Test
+    public void shouldApplyBoostSpeedBonus() {
+    	Unit ally = new Unit("Player", 55,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+    	ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WindBoost);
+    	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+    }
 	
 	@Test
     public void shouldApplyBoostBonusOnInitiateAsWhacker() {
@@ -474,9 +563,9 @@ public class CombatStatIncreaseSkillTests {
 	
 	@Test
     public void shouldApplyBoostBonusOnCounterAsSandBag() {
-    	Unit ally = new Unit("Player", 40,10,0,0,0);
+    	Unit ally = new Unit("Player", UnitType.CBreath, 40,10,0,0,0);
     	Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
-    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.EarthBoost);
+    	enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.WaterBoost);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
         assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 4), "The combat result is inconsistant, 4 damage should have been dealt.");
     }

@@ -60,7 +60,7 @@ public enum PassiveSkill {
 	Watersweep((unit, level) -> unit.addCombatInfo(UnitCombatInfo.preventCounter), PassiveSkillType.Sweep, StatType.Speed, new int[] {5,3,1}, 2),
 
 	Desperation((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
-	Vantage((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
+	Vantage((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeCounterPriorityAttack), PassiveSkillType.Damaged, StatType.Health, new int[] {25,50,75}),
 	BrashAssault((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeInitiateAttack), PassiveSkillType.Brash, StatType.Health, new int[] {30,40,50}),
 	QuickRiposte((unit, level) -> unit.addCombatInfo(UnitCombatInfo.freeCounterAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,80,70}),
 	WaryFighter((unit, level) -> unit.addCombatInfo(UnitCombatInfo.reduceOwnAttackCount, UnitCombatInfo.reduceEnemyAttackCount), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
@@ -81,7 +81,7 @@ public enum PassiveSkill {
 	WardingBreath((unit,level) -> {unit.addCombatInfo(UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnCounterAttack); return unit.increaseCombatBonus(4, StatType.Resistance);}, PassiveSkillType.Stance),
 	VengefulFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnCounterAttack, UnitCombatInfo.freeCounterAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
 	BoldFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnInitiateAttack, UnitCombatInfo.freeInitiateAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {100,50,0}),
-	SpecialFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnCounterAttack, UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnInitiateAttack, UnitCombatInfo.chargeOnInitiateAttack), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
+	SpecialFighter((unit,level) -> unit.addCombatInfo(UnitCombatInfo.chargeOnCounterAttack, UnitCombatInfo.chargeOnCounterDefend, UnitCombatInfo.chargeOnInitiateAttack, UnitCombatInfo.chargeOnInitiateDefend), PassiveSkillType.Undamaged, StatType.Health, new int[] {90,70,50}),
 	
 	//Weapon Unique Skills
 	InfantryEffective((unit, level) -> unit.addCombatInfo(UnitCombatInfo.effectiveDamage), PassiveSkillType.Effective, 0),
@@ -109,7 +109,7 @@ public enum PassiveSkill {
 	}
 	
 	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type, StatType stat, int[] threshold){
-		this(activation, type, StatType.None, threshold, 0);
+		this(activation, type, stat, threshold, 0);
 	}
 
 	PassiveSkill(SkillActivation<Unit, Integer, Integer> activation, PassiveSkillType type, StatType stat, int[] threshold, int qualifier){

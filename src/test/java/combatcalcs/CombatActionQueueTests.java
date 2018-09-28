@@ -31,9 +31,9 @@ public class CombatActionQueueTests {
     @Test
     public void shouldExitOnExactLethal() {
     	Unit ally = new Unit("Player", 10,20,5,0,0);
-    	Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+    	Unit enemy = new Unit("Sandbag", 10,10,0,0,0);
     	LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+        assertEquals(testOutput.size(), 3, "Should be 3 actions in the queue.");
     }
 
     @Test

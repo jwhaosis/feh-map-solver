@@ -55,7 +55,7 @@ public class CombatActionQueue {
 		if(checkCounterPrioritySkill()) {
 			resultQueue.add(enqueueCounter());
 		}
-		if(checkInitiatePrioritySkill()) {
+		if(attackingUnit.countCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack) != 0) {
 			resultQueue.add(enqueueAttack());
 		}
 		while(atkHits>0 || defHits>0) {
@@ -116,10 +116,6 @@ public class CombatActionQueue {
 		}
 	}
 		
-	private boolean checkInitiatePrioritySkill() {
-		return attackingUnit.countCombatInfo(UnitCombatInfo.freeInitiatePriorityAttack) != 0;
-	}
-
 	private boolean checkCounterPrioritySkill() {
 		if (!checkAllowCounter(attackingUnit, defendingUnit, ActivationPhase.Initiate)) {
 			return false;
@@ -140,7 +136,7 @@ public class CombatActionQueue {
 	private CombatAction enqueueCounter() {
 		if(defHits > 0) {
 			defHits--;
-			return new CombatAction(defendingUnit, attackingUnit, ActivationPhase.Initiate);
+			return new CombatAction(defendingUnit, attackingUnit, ActivationPhase.Counter);
 		} else {
 			return null;
 		}

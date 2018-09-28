@@ -28,11 +28,11 @@ public enum PassiveSkillType {
 	
 	Bond((unit, enemy, phase, stat, threshold, qualifier) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() > 0),
 	Solo((unit, enemy, phase, stat, threshold, qualifier) -> GameMap.getInstance().nearbyUnitsAllyUnits(unit, 1).size() == 0),
-		
+	
 	Damaged((unit, enemy, phase, stat, threshold, qualifier) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold),
 	Brash((unit, enemy, phase, stat, threshold, qualifier) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) <= threshold && CombatActionQueue.checkAllowCounter(unit, enemy, phase)),
-	Undamaged((unit, enemy, phase, stat, threshold, qualifier) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) >= threshold),
-	Breaker((unit, enemy, phase, stat, threshold, qualifier) -> 100.0 * unit.currentHealth() / unit.getStat(StatType.Health) >= threshold && qualifier == enemy.type.id);
+	Undamaged((unit, enemy, phase, stat, threshold, qualifier) -> unit.currentHealth() >= Math.floor((threshold / 100.0) * unit.getStat(StatType.Health))),
+	Breaker((unit, enemy, phase, stat, threshold, qualifier) -> unit.currentHealth() >= Math.floor((threshold / 100.0) * unit.getStat(StatType.Health)) && qualifier == enemy.type.id);
 
 	private SkillCondition<Unit, Unit, ActivationPhase, StatType, Integer, Integer, Boolean> condition;
 	

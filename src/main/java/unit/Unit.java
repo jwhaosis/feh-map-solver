@@ -128,15 +128,15 @@ public class Unit {
 		if(currentPhase == ActivationPhase.Initiate && thisAttacking) {
 			specialBoost = UnitCombatInfo.chargeOnInitiateAttack;
 		} else if (currentPhase == ActivationPhase.Initiate && !thisAttacking) {
-			specialBoost = UnitCombatInfo.chargeOnInitiateDefend;
+			specialBoost = UnitCombatInfo.chargeOnCounterDefend;
 		} else if (currentPhase == ActivationPhase.Counter && thisAttacking) {
 			specialBoost = UnitCombatInfo.chargeOnCounterAttack;
 		} else if (currentPhase == ActivationPhase.Counter && !thisAttacking) {
-			specialBoost = UnitCombatInfo.chargeOnCounterDefend;
+			specialBoost = UnitCombatInfo.chargeOnInitiateDefend;
 		} else {
 			specialBoost = null;
 		}
-		return Math.max(1, Collections.frequency(combatInfo, specialBoost));
+		return Math.max(1, Collections.frequency(combatInfo, specialBoost) + 1);
 	}
 	
 	public int slowEnemySpecialChargeBy() {
@@ -248,6 +248,9 @@ public class Unit {
 	}
 	
 	public void activateSkills(Unit enemy, ActivationPhase currentPhase) {
+		if(type.weaponType == WeaponType.Bow && enemy.moveType.isMoveType(MoveType.Flier)) {
+			addCombatInfo(UnitCombatInfo.effectiveDamage);
+		}
 		for(int i = 0; i < unitSkillList.size(); i++) {
 			PassiveSkill skill = unitSkillList.get(i);
 			skill.activateSkill(this, enemy, currentPhase, unitSkillLevels.get(i));

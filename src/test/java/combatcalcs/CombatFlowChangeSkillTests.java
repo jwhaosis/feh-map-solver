@@ -212,7 +212,7 @@ public class CombatFlowChangeSkillTests {
 		enemy.takeDamage(26);
 		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.VengefulFighter);
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
 	}
 	
 	@Test
@@ -290,7 +290,7 @@ public class CombatFlowChangeSkillTests {
 		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BoldFighter, 2);
 		ally.takeDamage(21);
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
 	}
 	
 	@Test
@@ -300,7 +300,7 @@ public class CombatFlowChangeSkillTests {
 		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.QuickRiposte);
 		enemy.takeDamage(16);
 		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
-        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
 	}
 	
 	@Test
@@ -342,6 +342,56 @@ public class CombatFlowChangeSkillTests {
         assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
 	}
 	
+//Wary Fighter Self and Interaction Tests
+	@Test
+	public void shouldIgnoreExtraAttackFromSpeedFromEnemy() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,5,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WaryFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldIgnoreExtraAttackFromSpeedFromSelf() {
+		Unit ally = new Unit("Player", 40,10,5,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WaryFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+
+	@Test
+	public void shouldRoundDownWaryThreshold() {
+		Unit ally = new Unit("Player", 53,10,5,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.takeDamage(27);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WaryFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldCancelWithFreeAttacksOnSelfInitiateWithSpeedAdvantage() {
+		Unit ally = new Unit("Player", 40,10,5,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WaryFighter);
+		ally.addSkill(PassiveSkillSlot.B, PassiveSkill.BoldFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+	
+	@Test
+	public void shouldCancelWithFreeAttacksOnEnemyCounterWithSpeedAdvantage() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,5,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.WaryFighter);
+		enemy.addSkill(PassiveSkillSlot.B, PassiveSkill.VengefulFighter);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
+	}
+
+
 //Breaker Skills
 	@Test
 	public void shouldGiveFreeInitiateAndStopDoubleSwordbreaker() {
@@ -459,44 +509,102 @@ public class CombatFlowChangeSkillTests {
 	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
 	}
 
-//TODO: Priority Change Skill Tests (Vantage/Desperation)
+//Priority Change Skill Tests (Vantage/Desperation)
 	@Test
 	public void shouldGiveDesperationPriorityInitiateOnDouble() {
-		
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Desperation);
+		ally.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
 	}
 	
 	@Test
 	public void shouldNotGiveDesperationFreeDouble() {
-		
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Desperation);
+		ally.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 5, "Should be 5 actions in the queue.");
 	}
 	
 	@Test
 	public void shouldNotGiveDesperationPriorityInitiateAboveThreshold() {
-		
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Desperation);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
 	}
 
 	@Test
 	public void shouldNotGiveDesperationPriorityCounter() {
-		
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 40,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Desperation);
+		enemy.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
 	}
 	
 	@Test
 	public void shouldGiveVantagePriorityCounter() {
-		
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 40,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Vantage);
+		enemy.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, the enemy should be attacking.");
 	}
 	
 	@Test
 	public void shouldNotGiveVantageFreeDouble() {
-		
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 40,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Vantage);
+		enemy.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+        assertEquals(testOutput.size(), 4, "Should be 4 actions in the queue.");
 	}
 	
 	@Test
 	public void shouldNotGiveVantagePriorityCounterAboveThreshold() {
-		
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 40,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Vantage);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
 	}
 
 	@Test
 	public void shouldNotGiveVantagePriorityInitiate() {
-		
+		Unit ally = new Unit("Player", 40,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 40,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Vantage);
+		ally.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, the enemy should be attacking.");
+	}
+	
+	@Test
+	public void shouldRoundDownDesperationThreshold() {
+		Unit ally = new Unit("Player", 41,10,10,0,0);
+		Unit enemy = new Unit("Sandbag", 50,10,0,0,0);
+		ally.addSkill(PassiveSkillSlot.A, PassiveSkill.Desperation);
+		ally.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(3), CombatStrings.DAMAGE(ally, enemy, 10), "The combat result is inconsistant, the ally should be attacking.");
+	}
+	
+	@Test
+	public void shouldRoundDownVantageThreshold() {
+		Unit ally = new Unit("Player", 40,10,0,0,0);
+		Unit enemy = new Unit("Sandbag", 41,10,0,0,0);
+		enemy.addSkill(PassiveSkillSlot.A, PassiveSkill.Vantage);
+		enemy.takeDamage(10);
+		LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(2), CombatStrings.DAMAGE(enemy, ally, 10), "The combat result is inconsistant, the enemy should be attacking.");
 	}
 }

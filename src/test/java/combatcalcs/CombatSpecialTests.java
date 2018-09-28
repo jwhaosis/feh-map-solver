@@ -216,5 +216,18 @@ public class CombatSpecialTests {
 	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
 	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 3), "The combat result is inconsistant, 3 damage should have been dealt.");
 	}
+	
+	@Test
+	public void shouldApplyBuffsToCalculation() {
+	    Unit ally = new Unit("Player", 40,10,0,0,11);
+	    Unit enemy = new Unit("Sandbag", 50,0,0,0,0);
+	    ally.addSkill(PassiveSkillSlot.A, PassiveSkill.BrazenDefRes);
+	    ally.addSpecial(SpecialSkill.Iceberg);
+	    ally.takeDamage(8);
+	    ally.increaseCurrentSpecialCharge(4);
+	    LinkedList<String> testOutput = new CombatActionQueue(ally, enemy).execute();
+	    assertEquals(testOutput.get(1), CombatStrings.DAMAGE(ally, enemy, 19), "The combat result is inconsistant, 19 damage should have been dealt.");
+	}
+
 
 }
